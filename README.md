@@ -11,7 +11,7 @@ generates tailwind merges and classes from go templ sources
 import "github.com/conneroisu/tmplmerge"
 ```
 
-Package tmplmerge provides a tailwind merger for go\-templ and code generation.
+package twerge provides a tailwind merger for go\-templ and code generation.
 
 ## Index
 

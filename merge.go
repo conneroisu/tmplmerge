@@ -1,4 +1,4 @@
-package tmplmerge
+package twerge
 
 import (
 	"regexp"
@@ -34,7 +34,7 @@ func CreateTwMerge(
 	var (
 		fnToCall        TwMergeFn
 		splitModifiers  SplitModifiersFn
-		getClassGroupID GetClassGroupIdfn
+		getClassGroupID GetClassGroupIDFn
 		mergeClassList  func(classList string) string
 	)
 
@@ -81,7 +81,7 @@ func CreateTwMerge(
 func MakeMergeClassList(
 	conf *Config,
 	splitModifiers SplitModifiersFn,
-	getClassGroupID GetClassGroupIdfn,
+	getClassGroupID GetClassGroupIDFn,
 ) func(classList string) string {
 	return func(classList string) string {
 		classes := splitPattern.Split(strings.TrimSpace(classList), -1)

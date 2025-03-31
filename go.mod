@@ -1,4 +1,4 @@
-module github.com/conneroisu/tmplmerge
+module github.com/conneroisu/twerge
 
 go 1.24.1
 

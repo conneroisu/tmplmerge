@@ -1,15 +1,15 @@
-package tmplmerge
+package twerge
 
 import (
 	"regexp"
 	"strings"
 )
 
-// GetClassGroupIdfn returns the class group id for a given class
-type GetClassGroupIdfn func(string) (isTwClass bool, groupId string)
+// GetClassGroupIDFn returns the class group id for a given class
+type GetClassGroupIDFn func(string) (isTwClass bool, groupId string)
 
 // MakeGetClassGroupID returns a GetClassGroupIdfn
-func MakeGetClassGroupID(conf *Config) GetClassGroupIdfn {
+func MakeGetClassGroupID(conf *Config) GetClassGroupIDFn {
 	var getClassGroupIDRecursive func(classParts []string, i int, classMap *ClassPart) (isTwClass bool, groupId string)
 	getClassGroupIDRecursive = func(classParts []string, i int, classMap *ClassPart) (isTwClass bool, groupId string) {
 		if i >= len(classParts) {
@@ -58,7 +58,6 @@ func MakeGetClassGroupID(conf *Config) GetClassGroupIdfn {
 	}
 
 	return func(baseClass string) (isTwClass bool, groupdId string) {
-
 		classParts := strings.Split(baseClass, string(conf.ClassSeparator))
 		// remove first element if empty for things like -px-4
 		if len(classParts) > 0 && classParts[0] == "" {

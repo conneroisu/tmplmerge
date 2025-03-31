@@ -1,4 +1,4 @@
-package tmplmerge
+package twerge
 
 import (
 	"regexp"
