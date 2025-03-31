@@ -5,13 +5,13 @@ import (
 	"strings"
 )
 
-// GetClassGroupIDFn returns the class group id for a given class
-type GetClassGroupIDFn func(string) (isTwClass bool, groupId string)
+// getClassGroupIDFn returns the class group id for a given class
+type getClassGroupIDFn func(string) (isTwClass bool, groupId string)
 
-// MakeGetClassGroupID returns a GetClassGroupIdfn
-func MakeGetClassGroupID(conf *Config) GetClassGroupIDFn {
-	var getClassGroupIDRecursive func(classParts []string, i int, classMap *ClassPart) (isTwClass bool, groupId string)
-	getClassGroupIDRecursive = func(classParts []string, i int, classMap *ClassPart) (isTwClass bool, groupId string) {
+// makeGetClassGroupID returns a getClassGroupIdfn
+func makeGetClassGroupID(conf *config) getClassGroupIDFn {
+	var getClassGroupIDRecursive func(classParts []string, i int, classMap *classPart) (isTwClass bool, groupId string)
+	getClassGroupIDRecursive = func(classParts []string, i int, classMap *classPart) (isTwClass bool, groupId string) {
 		if i >= len(classParts) {
 			if classMap.ClassGroupID != "" {
 				return true, classMap.ClassGroupID

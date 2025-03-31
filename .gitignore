@@ -12,3 +12,4 @@ go.work.sum
 .vscode
 node_modules
 .idea
+CLAUDE.md

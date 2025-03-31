@@ -1,0 +1,12 @@
+In a real application, this directory would contain the following image files:
+
+- avatar.jpg - User avatar image
+- keyboard.jpg - Mechanical keyboard product image
+- mouse.jpg - Ergonomic mouse product image
+- monitor.jpg - Ultrawide monitor product image
+- lamp.jpg - Desk lamp product image
+- electronics.jpg - Electronics category image
+- accessories.jpg - Accessories category image
+- home.jpg - Home tech category image
+
+For this example, we're using placeholder URLs in the HTML.

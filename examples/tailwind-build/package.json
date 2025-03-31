@@ -1,0 +1,12 @@
+{
+  "name": "twerge-tailwind-build-example",
+  "version": "1.0.0",
+  "description": "Example of using Twerge with Tailwind CSS build process",
+  "scripts": {
+    "build": "tailwindcss -i ./src/input.css -o ./dist/css/styles.css",
+    "watch": "tailwindcss -i ./src/input.css -o ./dist/css/styles.css --watch"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.0"
+  }
+}

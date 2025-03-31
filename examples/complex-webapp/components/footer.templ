@@ -1,0 +1,52 @@
+package components
+
+import "github.com/conneroisu/twerge"
+
+templ Footer() {
+	<footer class={ twerge.RuntimeGenerate("bg-gray-800 text-white") }>
+		<div class="tw-container">
+			<div class={ twerge.RuntimeGenerate("py-12 grid grid-cols-1 md:grid-cols-4 gap-8") }>
+				<div>
+					<h3 class={ twerge.RuntimeGenerate("text-lg font-semibold mb-4") }>TechShop</h3>
+					<p class={ twerge.RuntimeGenerate("text-gray-300 text-sm") }>
+						Your one-stop shop for all tech accessories and gadgets. Quality products for every tech enthusiast.
+					</p>
+				</div>
+				
+				<div>
+					<h3 class={ twerge.RuntimeGenerate("text-lg font-semibold mb-4") }>Quick Links</h3>
+					<ul class={ twerge.RuntimeGenerate("space-y-2") }>
+						<li><a href="/" class={ twerge.RuntimeGenerate("text-gray-300 hover:text-white") }>Home</a></li>
+						<li><a href="/products" class={ twerge.RuntimeGenerate("text-gray-300 hover:text-white") }>Products</a></li>
+						<li><a href="/about" class={ twerge.RuntimeGenerate("text-gray-300 hover:text-white") }>About</a></li>
+						<li><a href="/contact" class={ twerge.RuntimeGenerate("text-gray-300 hover:text-white") }>Contact</a></li>
+					</ul>
+				</div>
+				
+				<div>
+					<h3 class={ twerge.RuntimeGenerate("text-lg font-semibold mb-4") }>Customer Service</h3>
+					<ul class={ twerge.RuntimeGenerate("space-y-2") }>
+						<li><a href="/faq" class={ twerge.RuntimeGenerate("text-gray-300 hover:text-white") }>FAQ</a></li>
+						<li><a href="/shipping" class={ twerge.RuntimeGenerate("text-gray-300 hover:text-white") }>Shipping Policy</a></li>
+						<li><a href="/returns" class={ twerge.RuntimeGenerate("text-gray-300 hover:text-white") }>Returns & Refunds</a></li>
+						<li><a href="/privacy" class={ twerge.RuntimeGenerate("text-gray-300 hover:text-white") }>Privacy Policy</a></li>
+					</ul>
+				</div>
+				
+				<div>
+					<h3 class={ twerge.RuntimeGenerate("text-lg font-semibold mb-4") }>Contact Us</h3>
+					<p class={ twerge.RuntimeGenerate("text-gray-300 text-sm mb-2") }>123 Tech Street</p>
+					<p class={ twerge.RuntimeGenerate("text-gray-300 text-sm mb-2") }>San Francisco, CA 94107</p>
+					<p class={ twerge.RuntimeGenerate("text-gray-300 text-sm mb-2") }>Email: info@techshop.com</p>
+					<p class={ twerge.RuntimeGenerate("text-gray-300 text-sm") }>Phone: (123) 456-7890</p>
+				</div>
+			</div>
+			
+			<div class={ twerge.RuntimeGenerate("py-6 text-center border-t border-gray-700") }>
+				<p class={ twerge.RuntimeGenerate("text-gray-400 text-sm") }>
+					© { "2025" } TechShop. All rights reserved.
+				</p>
+			</div>
+		</div>
+	</footer>
+}

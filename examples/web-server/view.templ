@@ -2,28 +2,55 @@ package main
 
 import "github.com/conneroisu/twerge"
 
+// Initialize runtime class map
+func init() {
+	// Initialize with predefined classes
+	twerge.RegisterClasses(map[string]string{
+		"text-center bg-gray-900 text-gray-100 p-4": "tw-header",
+		"text-center bg-blue-900 text-blue-100 p-4": "tw-paragraph",
+		"text-center bg-green-900 text-green-100 p-4": "tw-outro",
+	})
+}
+
 templ MainView(title string, content string) {
 	<html>
 		<head>
 			<title>{ title }</title>
 			<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+			<style>
+				/* Generated class names from runtime map */
+				@unsafe {
+					twerge.GetRuntimeClassHTML()
+				}
+			</style>
 		</head>
 		<body>
+			<!-- Using Merge: Original Tailwind classes are preserved -->
 			<div
-				class={ twerge.Merge("text-center", "bg-gray-900", "text-gray-100", "p-4") }
+				class={ twerge.Merge("text-center bg-gray-900 text-gray-100 p-4") }
 			>
 				hello darkness my old friend
 			</div>
+			
+			<!-- Using Generate: Generates unique class name from generation step -->
 			<p
-				class={ twerge.Merge("text-center", "bg-blue-900", "text-blue-100", "p-4") }
+				class={ twerge.Generate("text-center bg-blue-900 text-blue-100 p-4") }
 			>
 				I've come to talk with you again
 			</p>
+			
+			<!-- Using RuntimeGenerate: Uses the static hashmap at runtime -->
 			<p
-				class={ twerge.Merge("text-center", "bg-green-900", "text-green-100", "p-4") }
+				class={ twerge.RuntimeGenerate("text-center bg-green-900 text-green-100 p-4") }
 			>
+				Because a vision softly creeping
+			</p>
+			
+			<!-- Direct usage of predefined class from runtime map -->
+			<p class="tw-outro">
 				And though you've been softly sleeping
 			</p>
+			
 			<h1>{ title }</h1>
 			<p>{ content }</p>
 		</body>

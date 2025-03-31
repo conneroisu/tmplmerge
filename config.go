@@ -21,8 +21,8 @@ var (
 	imageLabels = map[string]bool{"image": true, "url": true}
 )
 
-// Config is the configuration for the template merger
-type Config struct {
+// config is the configuration for the template merger
+type config struct {
 	// defaults should be good enough
 	// hover:bg-red-500 -> :
 	ModifierSeparator rune
@@ -37,63 +37,63 @@ type Config struct {
 	// CACHE
 	MaxCacheSize int
 	// This is a large map of all the classes and their validators -> see default-config.go
-	ClassGroups ClassPart
+	ClassGroups classPart
 	// class group with conflict + conflicting groups -> if "p" is set all others are removed
 	// p: ['px', 'py', 'ps', 'pe', 'pt', 'pr', 'pb', 'pl']
-	ConflictingClassGroups ConflictingClassGroups
+	ConflictingClassGroups conflictingClassGroups
 }
 
-// ClassGroupValidator is a validator for a class group
-type ClassGroupValidator struct {
+// classGroupValidator is a validator for a class group
+type classGroupValidator struct {
 	Fn           func(string) bool
 	ClassGroupID string
 }
 
-// ClassPart is a part of a class group
-type ClassPart struct {
-	NextPart     map[string]ClassPart
-	Validators   []ClassGroupValidator
+// classPart is a part of a class group
+type classPart struct {
+	NextPart     map[string]classPart
+	Validators   []classGroupValidator
 	ClassGroupID string
 }
 
-// ConflictingClassGroups is a map of class groups that conflict with each other
-type ConflictingClassGroups map[string][]string
+// conflictingClassGroups is a map of class groups that conflict with each other
+type conflictingClassGroups map[string][]string
 
-func getBreaks(groupID string) map[string]ClassPart {
-	return map[string]ClassPart{
+func getBreaks(groupID string) map[string]classPart {
+	return map[string]classPart{
 		"auto": {
-			NextPart:     map[string]ClassPart{},
-			Validators:   []ClassGroupValidator{},
+			NextPart:     map[string]classPart{},
+			Validators:   []classGroupValidator{},
 			ClassGroupID: groupID,
 		},
 		"avoid": {
-			NextPart:     make(map[string]ClassPart),
-			Validators:   []ClassGroupValidator{},
+			NextPart:     make(map[string]classPart),
+			Validators:   []classGroupValidator{},
 			ClassGroupID: groupID,
 		},
 		"all": {
-			NextPart:     map[string]ClassPart{},
-			Validators:   []ClassGroupValidator{},
+			NextPart:     map[string]classPart{},
+			Validators:   []classGroupValidator{},
 			ClassGroupID: groupID,
 		},
 		"page": {
-			NextPart:     map[string]ClassPart{},
-			Validators:   []ClassGroupValidator{},
+			NextPart:     map[string]classPart{},
+			Validators:   []classGroupValidator{},
 			ClassGroupID: groupID,
 		},
 		"left": {
-			NextPart:     map[string]ClassPart{},
-			Validators:   []ClassGroupValidator{},
+			NextPart:     map[string]classPart{},
+			Validators:   []classGroupValidator{},
 			ClassGroupID: groupID,
 		},
 		"right": {
-			NextPart:     map[string]ClassPart{},
-			Validators:   []ClassGroupValidator{},
+			NextPart:     map[string]classPart{},
+			Validators:   []classGroupValidator{},
 			ClassGroupID: groupID,
 		},
 		"column": {
-			NextPart:     map[string]ClassPart{},
-			Validators:   []ClassGroupValidator{},
+			NextPart:     map[string]classPart{},
+			Validators:   []classGroupValidator{},
 			ClassGroupID: groupID,
 		},
 	}
@@ -210,14 +210,14 @@ func GetIsArbitraryValue(
 	return false
 }
 
-// DefaultConfig is the default TwMergeConfig
-var DefaultConfig = &Config{
+// defaultConfig is the default TwMergeConfig
+var defaultConfig = &config{
 	ModifierSeparator: ':',
 	ClassSeparator:    '-',
 	ImportantModifier: '!',
 	PostfixModifier:   '/',
 	MaxCacheSize:      1000,
-	ConflictingClassGroups: ConflictingClassGroups{
+	ConflictingClassGroups: conflictingClassGroups{
 		"overflow":         {"overflow-x", "overflow-y"},
 		"overscroll":       {"overscroll-x", "overscroll-y"},
 		"inset":            {"inset-x", "inset-y", "start", "end", "top", "right", "bottom", "left"},
@@ -265,12 +265,12 @@ var DefaultConfig = &Config{
 		"touch-y":          {"touch"},
 		"touch-pz":         {"touch"},
 	},
-	ClassGroups: ClassPart{
-		NextPart: map[string]ClassPart{
+	ClassGroups: classPart{
+		NextPart: map[string]classPart{
 			// Aspect Ratio
 			// @see https://tailwindcss.com/docs/aspect-ratio
 			"aspect": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"auto": {
 						ClassGroupID: "aspect",
 					},
@@ -281,7 +281,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "aspect",
 					},
 				},
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isArbitraryValue,
 						ClassGroupID: "aspect",
@@ -291,14 +291,14 @@ var DefaultConfig = &Config{
 			// Container
 			// @see https://tailwindcss.com/docs/container
 			"container": {
-				NextPart:     map[string]ClassPart{},
+				NextPart:     map[string]classPart{},
 				ClassGroupID: "container",
 			},
 			// Columns
 			// @see https://tailwindcss.com/docs/columns
 			"columns": {
-				NextPart: map[string]ClassPart{},
-				Validators: []ClassGroupValidator{
+				NextPart: map[string]classPart{},
+				Validators: []classGroupValidator{
 					{
 						Fn:           isTshirtSize,
 						ClassGroupID: "columns",
@@ -306,7 +306,7 @@ var DefaultConfig = &Config{
 				},
 			},
 			"break": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					// Break After
 					// @see https://tailwindcss.com/docs/break-after
 					"after": {
@@ -321,12 +321,12 @@ var DefaultConfig = &Config{
 					// Break Inside
 					// @see https://tailwindcss.com/docs/break-inside
 					"inside": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"auto": {
 								ClassGroupID: "break-inside",
 							},
 							"avoid": {
-								NextPart: map[string]ClassPart{
+								NextPart: map[string]classPart{
 									"page": {
 										ClassGroupID: "break-inside",
 									},
@@ -354,11 +354,11 @@ var DefaultConfig = &Config{
 						ClassGroupID: "break",
 					},
 				},
-				Validators: []ClassGroupValidator{},
+				Validators: []classGroupValidator{},
 			},
 
 			"box": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					// Box Sizing
 					// @see https://tailwindcss.com/docs/box-sizing
 					"border": {
@@ -371,7 +371,7 @@ var DefaultConfig = &Config{
 					// Box Decoration Break
 					// @see https://tailwindcss.com/docs/box-decoration-break
 					"decoration": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"slice": {
 								ClassGroupID: "box-decoration"},
 							"clone": {
@@ -388,7 +388,7 @@ var DefaultConfig = &Config{
 				ClassGroupID: "display",
 			},
 			"inline": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"block": {ClassGroupID: "display"},
 					"flex":  {ClassGroupID: "display"},
 					"grid":  {ClassGroupID: "display"},
@@ -397,9 +397,9 @@ var DefaultConfig = &Config{
 				ClassGroupID: "display",
 			},
 			"flex": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"row": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"reverse": {
 								ClassGroupID: "flex-direction",
 							},
@@ -407,7 +407,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "flex-direction",
 					},
 					"col": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"reverse": {
 								ClassGroupID: "flex-direction",
 							},
@@ -415,7 +415,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "flex-direction",
 					},
 					"wrap": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"reverse": {
 								ClassGroupID: "flex-wrap",
 							},
@@ -438,7 +438,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "flex",
 					},
 				},
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isArbitraryValue,
 						ClassGroupID: "flex",
@@ -447,7 +447,7 @@ var DefaultConfig = &Config{
 				ClassGroupID: "display",
 			},
 			"table": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"caption": {
 						ClassGroupID: "display",
 					},
@@ -455,7 +455,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "display",
 					},
 					"column": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"group": {
 								ClassGroupID: "display",
 							},
@@ -463,21 +463,21 @@ var DefaultConfig = &Config{
 						ClassGroupID: "display",
 					},
 					"footer": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"group": {
 								ClassGroupID: "display",
 							},
 						},
 					},
 					"header": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"group": {
 								ClassGroupID: "display",
 							},
 						},
 					},
 					"row": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"group": {
 								ClassGroupID: "display",
 							},
@@ -494,12 +494,12 @@ var DefaultConfig = &Config{
 				ClassGroupID: "display",
 			},
 			"flow": {
-				NextPart: map[string]ClassPart{"root": {ClassGroupID: "display"}},
+				NextPart: map[string]classPart{"root": {ClassGroupID: "display"}},
 			},
 			"grid": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"cols": {
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isAny,
 								ClassGroupID: "grid-cols",
@@ -507,7 +507,7 @@ var DefaultConfig = &Config{
 						},
 					},
 					"rows": {
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isAny,
 								ClassGroupID: "grid-rows",
@@ -515,9 +515,9 @@ var DefaultConfig = &Config{
 						},
 					},
 					"flow": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"row": {
-								NextPart: map[string]ClassPart{
+								NextPart: map[string]classPart{
 									"dense": {
 										ClassGroupID: "grid-flow",
 									},
@@ -525,7 +525,7 @@ var DefaultConfig = &Config{
 								ClassGroupID: "grid-flow",
 							},
 							"col": {
-								NextPart: map[string]ClassPart{
+								NextPart: map[string]classPart{
 									"dense": {
 										ClassGroupID: "grid-flow",
 									},
@@ -538,22 +538,22 @@ var DefaultConfig = &Config{
 						},
 					},
 				},
-				Validators:   []ClassGroupValidator{},
+				Validators:   []classGroupValidator{},
 				ClassGroupID: "display",
 			},
 			"contents": {ClassGroupID: "display"},
 			"list": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"item": {
 						ClassGroupID: "display",
 					},
 					"image": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"none": {
 								ClassGroupID: "list-image",
 							},
 						},
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isArbitraryValue,
 								ClassGroupID: "list-image",
@@ -576,7 +576,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "list-style-position",
 					},
 				},
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn: func(s string) bool {
 							return s == "none" || s == "disc" || s == "decimal" || s == "square" || s == "circle"
@@ -587,7 +587,7 @@ var DefaultConfig = &Config{
 			},
 			"hidden": {ClassGroupID: "display"},
 			"float": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"right": {
 						ClassGroupID: "float",
 					},
@@ -606,7 +606,7 @@ var DefaultConfig = &Config{
 				},
 			},
 			"clear": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"left": {
 						ClassGroupID: "clear",
 					},
@@ -629,14 +629,14 @@ var DefaultConfig = &Config{
 			},
 			"isolate": {ClassGroupID: "isolation"},
 			"isolation": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"auto": {
 						ClassGroupID: "isolation",
 					},
 				},
 			},
 			"object": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"contain": {
 						ClassGroupID: "object-fit",
 					},
@@ -650,7 +650,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "object-fit",
 					},
 					"scale": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"down": {
 								ClassGroupID: "object-fit",
 							},
@@ -663,7 +663,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "object-position",
 					},
 					"left": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"bottom": {
 								ClassGroupID: "object-position",
 							},
@@ -673,7 +673,7 @@ var DefaultConfig = &Config{
 						},
 					},
 					"right": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"bottom": {
 								ClassGroupID: "object-position",
 							},
@@ -686,7 +686,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "object-position",
 					},
 				},
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isArbitraryValue,
 						ClassGroupID: "object-position",
@@ -695,7 +695,7 @@ var DefaultConfig = &Config{
 			},
 
 			"overflow": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"auto": {
 						ClassGroupID: "overflow",
 					},
@@ -712,7 +712,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "overflow",
 					},
 					"x": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"auto": {
 								ClassGroupID: "overflow-x",
 							},
@@ -731,7 +731,7 @@ var DefaultConfig = &Config{
 						},
 					},
 					"y": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"auto": {
 								ClassGroupID: "overflow-y",
 							},
@@ -752,7 +752,7 @@ var DefaultConfig = &Config{
 				},
 			},
 			"overscroll": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"auto": {
 						ClassGroupID: "overscroll",
 					},
@@ -763,7 +763,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "overscroll",
 					},
 					"x": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"auto": {
 								ClassGroupID: "overscroll-x",
 							},
@@ -776,7 +776,7 @@ var DefaultConfig = &Config{
 						},
 					},
 					"y": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"auto": {
 								ClassGroupID: "overscroll-y",
 							},
@@ -789,7 +789,7 @@ var DefaultConfig = &Config{
 						},
 					},
 				},
-				Validators: []ClassGroupValidator{},
+				Validators: []classGroupValidator{},
 			},
 
 			"static": {
@@ -809,17 +809,17 @@ var DefaultConfig = &Config{
 			},
 
 			"inset": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"auto": {
 						ClassGroupID: "inset",
 					},
 					"x": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"auto": {
 								ClassGroupID: "inset-x",
 							},
 						},
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isArbitraryValue,
 								ClassGroupID: "inset-x",
@@ -835,12 +835,12 @@ var DefaultConfig = &Config{
 						},
 					},
 					"y": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"auto": {
 								ClassGroupID: "inset-y",
 							},
 						},
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isArbitraryValue,
 								ClassGroupID: "inset-y",
@@ -856,7 +856,7 @@ var DefaultConfig = &Config{
 						},
 					},
 				},
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isArbitraryValue,
 						ClassGroupID: "inset",
@@ -872,12 +872,12 @@ var DefaultConfig = &Config{
 				},
 			},
 			"start": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"auto": {
 						ClassGroupID: "start",
 					},
 				},
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isArbitraryValue,
 						ClassGroupID: "start",
@@ -893,12 +893,12 @@ var DefaultConfig = &Config{
 				},
 			},
 			"end": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"auto": {
 						ClassGroupID: "end",
 					},
 				},
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isArbitraryValue,
 						ClassGroupID: "end",
@@ -914,12 +914,12 @@ var DefaultConfig = &Config{
 				},
 			},
 			"top": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"auto": {
 						ClassGroupID: "top",
 					},
 				},
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isArbitraryValue,
 						ClassGroupID: "top",
@@ -935,12 +935,12 @@ var DefaultConfig = &Config{
 				},
 			},
 			"right": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"auto": {
 						ClassGroupID: "right",
 					},
 				},
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isArbitraryValue,
 						ClassGroupID: "right",
@@ -956,12 +956,12 @@ var DefaultConfig = &Config{
 				},
 			},
 			"bottom": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"auto": {
 						ClassGroupID: "bottom",
 					},
 				},
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isArbitraryValue,
 						ClassGroupID: "bottom",
@@ -977,12 +977,12 @@ var DefaultConfig = &Config{
 				},
 			},
 			"left": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"auto": {
 						ClassGroupID: "left",
 					},
 				},
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isArbitraryValue,
 						ClassGroupID: "left",
@@ -1007,12 +1007,12 @@ var DefaultConfig = &Config{
 				ClassGroupID: "visibility",
 			},
 			"z": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"auto": {
 						ClassGroupID: "z",
 					},
 				},
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isInteger,
 						ClassGroupID: "z",
@@ -1024,12 +1024,12 @@ var DefaultConfig = &Config{
 				},
 			},
 			"basis": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"auto": {
 						ClassGroupID: "basis",
 					},
 				},
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isArbitraryValue,
 						ClassGroupID: "basis",
@@ -1045,12 +1045,12 @@ var DefaultConfig = &Config{
 				},
 			},
 			"grow": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"0": {
 						ClassGroupID: "grow",
 					},
 				},
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isArbitraryValue,
 						ClassGroupID: "grow",
@@ -1059,12 +1059,12 @@ var DefaultConfig = &Config{
 				ClassGroupID: "grow",
 			},
 			"shrink": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"0": {
 						ClassGroupID: "shrink",
 					},
 				},
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isArbitraryValue,
 						ClassGroupID: "shrink",
@@ -1073,7 +1073,7 @@ var DefaultConfig = &Config{
 				ClassGroupID: "shrink",
 			},
 			"order": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"first": {
 						ClassGroupID: "order",
 					},
@@ -1084,7 +1084,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "order",
 					},
 				},
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isInteger,
 						ClassGroupID: "order",
@@ -1096,21 +1096,21 @@ var DefaultConfig = &Config{
 				},
 			},
 			"col": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"auto": {
-						NextPart:     map[string]ClassPart{},
-						Validators:   []ClassGroupValidator{},
+						NextPart:     map[string]classPart{},
+						Validators:   []classGroupValidator{},
 						ClassGroupID: "col-start-end",
 					},
 					"span": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"full": {
-								NextPart:     map[string]ClassPart{},
-								Validators:   []ClassGroupValidator{},
+								NextPart:     map[string]classPart{},
+								Validators:   []classGroupValidator{},
 								ClassGroupID: "col-start-end",
 							},
 						},
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isInteger,
 								ClassGroupID: "col-start-end",
@@ -1122,14 +1122,14 @@ var DefaultConfig = &Config{
 						},
 					},
 					"start": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"auto": {
-								NextPart:     map[string]ClassPart{},
-								Validators:   []ClassGroupValidator{},
+								NextPart:     map[string]classPart{},
+								Validators:   []classGroupValidator{},
 								ClassGroupID: "col-start",
 							},
 						},
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isNumber,
 								ClassGroupID: "col-start",
@@ -1141,14 +1141,14 @@ var DefaultConfig = &Config{
 						},
 					},
 					"end": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"auto": {
-								NextPart:     map[string]ClassPart{},
-								Validators:   []ClassGroupValidator{},
+								NextPart:     map[string]classPart{},
+								Validators:   []classGroupValidator{},
 								ClassGroupID: "col-end",
 							},
 						},
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isNumber,
 								ClassGroupID: "col-end",
@@ -1160,7 +1160,7 @@ var DefaultConfig = &Config{
 						},
 					},
 				},
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isArbitraryValue,
 						ClassGroupID: "col-start-end",
@@ -1168,15 +1168,15 @@ var DefaultConfig = &Config{
 				},
 			},
 			"row": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"auto": {
-						NextPart:     map[string]ClassPart{},
-						Validators:   []ClassGroupValidator{},
+						NextPart:     map[string]classPart{},
+						Validators:   []classGroupValidator{},
 						ClassGroupID: "row-start-end",
 					},
 					"span": {
-						NextPart: map[string]ClassPart{},
-						Validators: []ClassGroupValidator{
+						NextPart: map[string]classPart{},
+						Validators: []classGroupValidator{
 							{
 								Fn:           isInteger,
 								ClassGroupID: "row-start-end",
@@ -1188,14 +1188,14 @@ var DefaultConfig = &Config{
 						},
 					},
 					"start": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"auto": {
-								NextPart:     map[string]ClassPart{},
-								Validators:   []ClassGroupValidator{},
+								NextPart:     map[string]classPart{},
+								Validators:   []classGroupValidator{},
 								ClassGroupID: "row-start",
 							},
 						},
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isNumber,
 								ClassGroupID: "row-start",
@@ -1207,14 +1207,14 @@ var DefaultConfig = &Config{
 						},
 					},
 					"end": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"auto": {
-								NextPart:     map[string]ClassPart{},
-								Validators:   []ClassGroupValidator{},
+								NextPart:     map[string]classPart{},
+								Validators:   []classGroupValidator{},
 								ClassGroupID: "row-end",
 							},
 						},
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isNumber,
 								ClassGroupID: "row-end",
@@ -1226,7 +1226,7 @@ var DefaultConfig = &Config{
 						},
 					},
 				},
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isArbitraryValue,
 						ClassGroupID: "row-start-end",
@@ -1234,31 +1234,31 @@ var DefaultConfig = &Config{
 				},
 			},
 			"auto": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"cols": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"auto": {
-								NextPart:     map[string]ClassPart{},
-								Validators:   []ClassGroupValidator{},
+								NextPart:     map[string]classPart{},
+								Validators:   []classGroupValidator{},
 								ClassGroupID: "auto-cols",
 							},
 							"min": {
-								NextPart:     map[string]ClassPart{},
-								Validators:   []ClassGroupValidator{},
+								NextPart:     map[string]classPart{},
+								Validators:   []classGroupValidator{},
 								ClassGroupID: "auto-cols",
 							},
 							"max": {
-								NextPart:     map[string]ClassPart{},
-								Validators:   []ClassGroupValidator{},
+								NextPart:     map[string]classPart{},
+								Validators:   []classGroupValidator{},
 								ClassGroupID: "auto-cols",
 							},
 							"fr": {
-								NextPart:     map[string]ClassPart{},
-								Validators:   []ClassGroupValidator{},
+								NextPart:     map[string]classPart{},
+								Validators:   []classGroupValidator{},
 								ClassGroupID: "auto-cols",
 							},
 						},
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isArbitraryValue,
 								ClassGroupID: "auto-cols",
@@ -1266,29 +1266,29 @@ var DefaultConfig = &Config{
 						},
 					},
 					"rows": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"auto": {
-								NextPart:     map[string]ClassPart{},
-								Validators:   []ClassGroupValidator{},
+								NextPart:     map[string]classPart{},
+								Validators:   []classGroupValidator{},
 								ClassGroupID: "auto-rows",
 							},
 							"min": {
-								NextPart:     map[string]ClassPart{},
-								Validators:   []ClassGroupValidator{},
+								NextPart:     map[string]classPart{},
+								Validators:   []classGroupValidator{},
 								ClassGroupID: "auto-rows",
 							},
 							"max": {
-								NextPart:     map[string]ClassPart{},
-								Validators:   []ClassGroupValidator{},
+								NextPart:     map[string]classPart{},
+								Validators:   []classGroupValidator{},
 								ClassGroupID: "auto-rows",
 							},
 							"fr": {
-								NextPart:     map[string]ClassPart{},
-								Validators:   []ClassGroupValidator{},
+								NextPart:     map[string]classPart{},
+								Validators:   []classGroupValidator{},
 								ClassGroupID: "auto-rows",
 							},
 						},
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isArbitraryValue,
 								ClassGroupID: "auto-rows",
@@ -1296,12 +1296,12 @@ var DefaultConfig = &Config{
 						},
 					},
 				},
-				Validators: []ClassGroupValidator{},
+				Validators: []classGroupValidator{},
 			},
 			"gap": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"x": {
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isArbitraryValue,
 								ClassGroupID: "gap-x",
@@ -1317,7 +1317,7 @@ var DefaultConfig = &Config{
 						},
 					},
 					"y": {
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isArbitraryValue,
 								ClassGroupID: "gap-y",
@@ -1333,7 +1333,7 @@ var DefaultConfig = &Config{
 						},
 					},
 				},
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isArbitraryValue,
 						ClassGroupID: "gap",
@@ -1349,7 +1349,7 @@ var DefaultConfig = &Config{
 				},
 			},
 			"justify": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"normal": {
 						ClassGroupID: "justify-content",
 					},
@@ -1375,7 +1375,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "justify-content",
 					},
 					"items": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"start": {
 								ClassGroupID: "justify-items",
 							},
@@ -1391,7 +1391,7 @@ var DefaultConfig = &Config{
 						},
 					},
 					"self": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"auto": {
 								ClassGroupID: "justify-self",
 							},
@@ -1412,7 +1412,7 @@ var DefaultConfig = &Config{
 				},
 			},
 			"content": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"normal": {
 						ClassGroupID: "align-content",
 					},
@@ -1444,7 +1444,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "content",
 					},
 				},
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isArbitraryValue,
 						ClassGroupID: "content",
@@ -1452,7 +1452,7 @@ var DefaultConfig = &Config{
 				},
 			},
 			"items": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"start": {
 						ClassGroupID: "align-items",
 					},
@@ -1471,7 +1471,7 @@ var DefaultConfig = &Config{
 				},
 			},
 			"self": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"auto": {
 						ClassGroupID: "align-self",
 					},
@@ -1493,9 +1493,9 @@ var DefaultConfig = &Config{
 				},
 			},
 			"place": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"content": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"start": {
 								ClassGroupID: "place-content",
 							},
@@ -1523,7 +1523,7 @@ var DefaultConfig = &Config{
 						},
 					},
 					"items": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"start": {
 								ClassGroupID: "place-items",
 							},
@@ -1542,7 +1542,7 @@ var DefaultConfig = &Config{
 						},
 					},
 					"self": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"auto": {
 								ClassGroupID: "place-self",
 							},
@@ -1563,7 +1563,7 @@ var DefaultConfig = &Config{
 				},
 			},
 			"p": {
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isArbitraryValue,
 						ClassGroupID: "p",
@@ -1579,7 +1579,7 @@ var DefaultConfig = &Config{
 				},
 			},
 			"px": {
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isArbitraryValue,
 						ClassGroupID: "px",
@@ -1595,7 +1595,7 @@ var DefaultConfig = &Config{
 				},
 			},
 			"py": {
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isArbitraryValue,
 						ClassGroupID: "py",
@@ -1611,7 +1611,7 @@ var DefaultConfig = &Config{
 				},
 			},
 			"ps": {
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isArbitraryValue,
 						ClassGroupID: "ps",
@@ -1627,7 +1627,7 @@ var DefaultConfig = &Config{
 				},
 			},
 			"pe": {
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isArbitraryValue,
 						ClassGroupID: "pe",
@@ -1643,7 +1643,7 @@ var DefaultConfig = &Config{
 				},
 			},
 			"pt": {
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isArbitraryValue,
 						ClassGroupID: "pt",
@@ -1659,7 +1659,7 @@ var DefaultConfig = &Config{
 				},
 			},
 			"pr": {
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isArbitraryValue,
 						ClassGroupID: "pr",
@@ -1675,7 +1675,7 @@ var DefaultConfig = &Config{
 				},
 			},
 			"pb": {
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isArbitraryValue,
 						ClassGroupID: "pb",
@@ -1691,7 +1691,7 @@ var DefaultConfig = &Config{
 				},
 			},
 			"pl": {
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isArbitraryValue,
 						ClassGroupID: "pl",
@@ -1707,13 +1707,13 @@ var DefaultConfig = &Config{
 				},
 			},
 			"m": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"auto": {
-						Validators:   []ClassGroupValidator{},
+						Validators:   []classGroupValidator{},
 						ClassGroupID: "m",
 					},
 				},
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isArbitraryValue,
 						ClassGroupID: "m",
@@ -1729,13 +1729,13 @@ var DefaultConfig = &Config{
 				},
 			},
 			"mx": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"auto": {
-						Validators:   []ClassGroupValidator{},
+						Validators:   []classGroupValidator{},
 						ClassGroupID: "mx",
 					},
 				},
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isArbitraryValue,
 						ClassGroupID: "mx",
@@ -1751,13 +1751,13 @@ var DefaultConfig = &Config{
 				},
 			},
 			"my": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"auto": {
-						Validators:   []ClassGroupValidator{},
+						Validators:   []classGroupValidator{},
 						ClassGroupID: "my",
 					},
 				},
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isArbitraryValue,
 						ClassGroupID: "my",
@@ -1773,13 +1773,13 @@ var DefaultConfig = &Config{
 				},
 			},
 			"ms": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"auto": {
-						Validators:   []ClassGroupValidator{},
+						Validators:   []classGroupValidator{},
 						ClassGroupID: "ms",
 					},
 				},
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isArbitraryValue,
 						ClassGroupID: "ms",
@@ -1795,13 +1795,13 @@ var DefaultConfig = &Config{
 				},
 			},
 			"me": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"auto": {
-						Validators:   []ClassGroupValidator{},
+						Validators:   []classGroupValidator{},
 						ClassGroupID: "me",
 					},
 				},
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isArbitraryValue,
 						ClassGroupID: "me",
@@ -1817,13 +1817,13 @@ var DefaultConfig = &Config{
 				},
 			},
 			"mt": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"auto": {
-						Validators:   []ClassGroupValidator{},
+						Validators:   []classGroupValidator{},
 						ClassGroupID: "mt",
 					},
 				},
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isArbitraryValue,
 						ClassGroupID: "mt",
@@ -1839,13 +1839,13 @@ var DefaultConfig = &Config{
 				},
 			},
 			"mr": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"auto": {
-						Validators:   []ClassGroupValidator{},
+						Validators:   []classGroupValidator{},
 						ClassGroupID: "mr",
 					},
 				},
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isArbitraryValue,
 						ClassGroupID: "mr",
@@ -1861,13 +1861,13 @@ var DefaultConfig = &Config{
 				},
 			},
 			"mb": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"auto": {
-						Validators:   []ClassGroupValidator{},
+						Validators:   []classGroupValidator{},
 						ClassGroupID: "mb",
 					},
 				},
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isArbitraryValue,
 						ClassGroupID: "mb",
@@ -1883,13 +1883,13 @@ var DefaultConfig = &Config{
 				},
 			},
 			"ml": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"auto": {
-						Validators:   []ClassGroupValidator{},
+						Validators:   []classGroupValidator{},
 						ClassGroupID: "ml",
 					},
 				},
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isArbitraryValue,
 						ClassGroupID: "ml",
@@ -1905,15 +1905,15 @@ var DefaultConfig = &Config{
 				},
 			},
 			"space": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"x": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"reverse": {
-								Validators:   []ClassGroupValidator{},
+								Validators:   []classGroupValidator{},
 								ClassGroupID: "space-x-reverse",
 							},
 						},
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isArbitraryValue,
 								ClassGroupID: "space-x",
@@ -1929,12 +1929,12 @@ var DefaultConfig = &Config{
 						},
 					},
 					"y": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"reverse": {
 								ClassGroupID: "space-y-reverse",
 							},
 						},
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isArbitraryValue,
 								ClassGroupID: "space-y",
@@ -1950,10 +1950,10 @@ var DefaultConfig = &Config{
 						},
 					},
 				},
-				Validators: []ClassGroupValidator{},
+				Validators: []classGroupValidator{},
 			},
 			"w": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"auto": {
 						ClassGroupID: "w",
 					},
@@ -1976,7 +1976,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "w",
 					},
 				},
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isArbitraryValue,
 						ClassGroupID: "w",
@@ -1992,9 +1992,9 @@ var DefaultConfig = &Config{
 				},
 			},
 			"min": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"w": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"min": {
 								ClassGroupID: "min-w",
 							},
@@ -2005,7 +2005,7 @@ var DefaultConfig = &Config{
 								ClassGroupID: "min-w",
 							},
 						},
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isArbitraryValue,
 								ClassGroupID: "min-w",
@@ -2021,7 +2021,7 @@ var DefaultConfig = &Config{
 						},
 					},
 					"h": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"min": {
 								ClassGroupID: "min-h",
 							},
@@ -2041,7 +2041,7 @@ var DefaultConfig = &Config{
 								ClassGroupID: "min-h",
 							},
 						},
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isArbitraryValue,
 								ClassGroupID: "min-h",
@@ -2057,12 +2057,12 @@ var DefaultConfig = &Config{
 						},
 					},
 				},
-				Validators: []ClassGroupValidator{},
+				Validators: []classGroupValidator{},
 			},
 			"max": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"w": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"none": {
 								ClassGroupID: "max-w",
 							},
@@ -2082,7 +2082,7 @@ var DefaultConfig = &Config{
 								ClassGroupID: "max-w",
 							},
 							"screen": {
-								Validators: []ClassGroupValidator{
+								Validators: []classGroupValidator{
 									{
 										Fn:           isTshirtSize,
 										ClassGroupID: "max-w",
@@ -2091,7 +2091,7 @@ var DefaultConfig = &Config{
 								ClassGroupID: "max-w",
 							},
 						},
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isArbitraryValue,
 								ClassGroupID: "max-w",
@@ -2112,7 +2112,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "max-w",
 					},
 					"h": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"min": {
 								ClassGroupID: "max-h",
 							},
@@ -2132,7 +2132,7 @@ var DefaultConfig = &Config{
 								ClassGroupID: "max-h",
 							},
 						},
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isArbitraryValue,
 								ClassGroupID: "max-h",
@@ -2151,7 +2151,7 @@ var DefaultConfig = &Config{
 				},
 			},
 			"h": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"auto": {
 						ClassGroupID: "h",
 					},
@@ -2174,7 +2174,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "h",
 					},
 				},
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isArbitraryValue,
 						ClassGroupID: "h",
@@ -2191,7 +2191,7 @@ var DefaultConfig = &Config{
 				ClassGroupID: "h",
 			},
 			"size": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"auto": {
 						ClassGroupID: "size",
 					},
@@ -2205,7 +2205,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "size",
 					},
 				},
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isArbitraryValue,
 						ClassGroupID: "size",
@@ -2222,7 +2222,7 @@ var DefaultConfig = &Config{
 				ClassGroupID: "size",
 			},
 			"text": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"base": {
 						ClassGroupID: "font-size",
 					},
@@ -2245,7 +2245,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "text-alignment",
 					},
 					"opacity": {
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isNumber,
 								ClassGroupID: "text-opacity",
@@ -2276,7 +2276,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "text-wrap",
 					},
 				},
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isTshirtSize,
 						ClassGroupID: "font-size",
@@ -2295,7 +2295,7 @@ var DefaultConfig = &Config{
 				ClassGroupID: "font-smoothing",
 			},
 			"subpixel": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"antialiased": {
 						ClassGroupID: "font-smoothing",
 					},
@@ -2305,12 +2305,12 @@ var DefaultConfig = &Config{
 				ClassGroupID: "font-style",
 			},
 			"not": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"italic": {
 						ClassGroupID: "font-style",
 					},
 					"sr": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"only": {
 								ClassGroupID: "sr",
 							},
@@ -2319,7 +2319,7 @@ var DefaultConfig = &Config{
 				},
 			},
 			"font": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"thin": {
 						ClassGroupID: "font-weight",
 					},
@@ -2348,7 +2348,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "font-weight",
 					},
 				},
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           IsArbitraryNumber,
 						ClassGroupID: "font-weight",
@@ -2360,7 +2360,7 @@ var DefaultConfig = &Config{
 				},
 			},
 			"normal": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"nums": {
 						ClassGroupID: "fvn-normal",
 					},
@@ -2373,56 +2373,56 @@ var DefaultConfig = &Config{
 				ClassGroupID: "fvn-ordinal",
 			},
 			"slashed": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"zero": {
 						ClassGroupID: "fvn-slashed-zero",
 					},
 				},
 			},
 			"lining": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"nums": {
 						ClassGroupID: "fvn-figure",
 					},
 				},
 			},
 			"oldstyle": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"nums": {
 						ClassGroupID: "fvn-figure",
 					},
 				},
 			},
 			"proportional": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"nums": {
 						ClassGroupID: "fvn-spacing",
 					},
 				},
 			},
 			"tabular": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"nums": {
 						ClassGroupID: "fvn-spacing",
 					},
 				},
 			},
 			"diagonal": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"fractions": {
 						ClassGroupID: "fvn-fraction",
 					},
 				},
 			},
 			"stacked": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"fractons": {
 						ClassGroupID: "fvn-fraction",
 					},
 				},
 			},
 			"tracking": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"tighter": {
 						ClassGroupID: "tracking",
 					},
@@ -2442,7 +2442,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "tracking",
 					},
 				},
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isArbitraryValue,
 						ClassGroupID: "tracking",
@@ -2450,14 +2450,14 @@ var DefaultConfig = &Config{
 				},
 			},
 			"line": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"clamp": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"none": {
 								ClassGroupID: "line-clamp",
 							},
 						},
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isNumber,
 								ClassGroupID: "line-clamp",
@@ -2474,7 +2474,7 @@ var DefaultConfig = &Config{
 				},
 			},
 			"leading": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"none": {
 						ClassGroupID: "leading",
 					},
@@ -2494,7 +2494,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "leading",
 					},
 				},
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isLength,
 						ClassGroupID: "leading",
@@ -2506,9 +2506,9 @@ var DefaultConfig = &Config{
 				},
 			},
 			"placeholder": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"opacity": {
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isNumber,
 								ClassGroupID: "placeholder-opacity",
@@ -2520,7 +2520,7 @@ var DefaultConfig = &Config{
 						},
 					},
 				},
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isAny,
 						ClassGroupID: "placeholder-color",
@@ -2528,14 +2528,14 @@ var DefaultConfig = &Config{
 				},
 			},
 			"underline": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"offset": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"auto": {
 								ClassGroupID: "underline-offset",
 							},
 						},
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isLength,
 								ClassGroupID: "underline-offset",
@@ -2553,14 +2553,14 @@ var DefaultConfig = &Config{
 				ClassGroupID: "text-decoration",
 			},
 			"no": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"underline": {
 						ClassGroupID: "text-decoration",
 					},
 				},
 			},
 			"decoration": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"solid": {
 						ClassGroupID: "text-decoration-style",
 					},
@@ -2583,14 +2583,14 @@ var DefaultConfig = &Config{
 						ClassGroupID: "text-decoration-thickness",
 					},
 					"from": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"font": {
 								ClassGroupID: "text-decoration-thickness",
 							},
 						},
 					},
 				},
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isLength,
 						ClassGroupID: "text-decoration-thickness",
@@ -2619,7 +2619,7 @@ var DefaultConfig = &Config{
 				ClassGroupID: "text-overflow",
 			},
 			"indent": {
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isArbitraryValue,
 						ClassGroupID: "indent",
@@ -2635,7 +2635,7 @@ var DefaultConfig = &Config{
 				},
 			},
 			"align": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"baseline": {
 						ClassGroupID: "vertical-align",
 					},
@@ -2649,7 +2649,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "vertical-align",
 					},
 					"text": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"top": {
 								ClassGroupID: "vertical-align",
 							},
@@ -2665,7 +2665,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "vertical-align",
 					},
 				},
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isArbitraryValue,
 						ClassGroupID: "vertical-align",
@@ -2673,7 +2673,7 @@ var DefaultConfig = &Config{
 				},
 			},
 			"whitespace": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"normal": {
 						ClassGroupID: "whitespace",
 					},
@@ -2681,7 +2681,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "whitespace",
 					},
 					"pre": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"line": {
 								ClassGroupID: "whitespace",
 							},
@@ -2692,7 +2692,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "whitespace",
 					},
 					"break": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"spaces": {
 								ClassGroupID: "whitespace",
 							},
@@ -2702,7 +2702,7 @@ var DefaultConfig = &Config{
 				},
 			},
 			"hyphens": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"none": {
 						ClassGroupID: "hyphens",
 					},
@@ -2715,7 +2715,7 @@ var DefaultConfig = &Config{
 				},
 			},
 			"bg": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"fixed": {
 						ClassGroupID: "bg-attachment",
 					},
@@ -2726,7 +2726,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "bg-attachment",
 					},
 					"clip": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"border": {
 								ClassGroupID: "bg-clip",
 							},
@@ -2742,7 +2742,7 @@ var DefaultConfig = &Config{
 						},
 					},
 					"opacity": {
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isNumber,
 								ClassGroupID: "bg-opacity",
@@ -2754,7 +2754,7 @@ var DefaultConfig = &Config{
 						},
 					},
 					"origin": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"border": {
 								ClassGroupID: "bg-origin",
 							},
@@ -2773,7 +2773,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "bg-position",
 					},
 					"left": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"bottom": {
 								ClassGroupID: "bg-position",
 							},
@@ -2784,7 +2784,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "bg-position",
 					},
 					"right": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"bottom": {
 								ClassGroupID: "bg-position",
 							},
@@ -2798,14 +2798,14 @@ var DefaultConfig = &Config{
 						ClassGroupID: "bg-position",
 					},
 					"no": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"repeat": {
 								ClassGroupID: "bg-repeat",
 							},
 						},
 					},
 					"repeat": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"x": {
 								ClassGroupID: "bg-repeat",
 							},
@@ -2834,9 +2834,9 @@ var DefaultConfig = &Config{
 						ClassGroupID: "bg-image",
 					},
 					"gradient": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"to": {
-								NextPart: map[string]ClassPart{
+								NextPart: map[string]classPart{
 									"t": {
 										ClassGroupID: "bg-image",
 									},
@@ -2866,7 +2866,7 @@ var DefaultConfig = &Config{
 						},
 					},
 					"blend": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"normal": {
 								ClassGroupID: "bg-blend",
 							},
@@ -2886,7 +2886,7 @@ var DefaultConfig = &Config{
 								ClassGroupID: "bg-blend",
 							},
 							"color": {
-								NextPart: map[string]ClassPart{
+								NextPart: map[string]classPart{
 									"dodge": {
 										ClassGroupID: "bg-blend",
 									},
@@ -2896,14 +2896,14 @@ var DefaultConfig = &Config{
 								},
 							},
 							"hard": {
-								NextPart: map[string]ClassPart{
+								NextPart: map[string]classPart{
 									"light": {
 										ClassGroupID: "bg-blend",
 									},
 								},
 							},
 							"soft": {
-								NextPart: map[string]ClassPart{
+								NextPart: map[string]classPart{
 									"light": {
 										ClassGroupID: "bg-blend",
 									},
@@ -2925,7 +2925,7 @@ var DefaultConfig = &Config{
 								ClassGroupID: "bg-blend",
 							},
 							"plus": {
-								NextPart: map[string]ClassPart{
+								NextPart: map[string]classPart{
 									"lighter": {
 										ClassGroupID: "bg-blend",
 									},
@@ -2934,7 +2934,7 @@ var DefaultConfig = &Config{
 						},
 					},
 				},
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isArbitraryPosition,
 						ClassGroupID: "bg-position",
@@ -2954,7 +2954,7 @@ var DefaultConfig = &Config{
 				},
 			},
 			"from": {
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isPercent,
 						ClassGroupID: "gradient-from-pos",
@@ -2970,7 +2970,7 @@ var DefaultConfig = &Config{
 				},
 			},
 			"via": {
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isPercent,
 						ClassGroupID: "gradient-via-pos",
@@ -2986,7 +2986,7 @@ var DefaultConfig = &Config{
 				},
 			},
 			"to": {
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isPercent,
 						ClassGroupID: "gradient-to-pos",
@@ -3002,7 +3002,7 @@ var DefaultConfig = &Config{
 				},
 			},
 			"rounded": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"none": {
 						ClassGroupID: "rounded",
 					},
@@ -3010,7 +3010,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "rounded",
 					},
 					"s": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"none": {
 								ClassGroupID: "rounded-s",
 							},
@@ -3018,7 +3018,7 @@ var DefaultConfig = &Config{
 								ClassGroupID: "rounded-s",
 							},
 						},
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isTshirtSize,
 								ClassGroupID: "rounded-s",
@@ -3031,7 +3031,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "rounded-s",
 					},
 					"e": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"none": {
 								ClassGroupID: "rounded-e",
 							},
@@ -3039,7 +3039,7 @@ var DefaultConfig = &Config{
 								ClassGroupID: "rounded-e",
 							},
 						},
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isTshirtSize,
 								ClassGroupID: "rounded-e",
@@ -3052,7 +3052,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "rounded-e",
 					},
 					"t": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"none": {
 								ClassGroupID: "rounded-t",
 							},
@@ -3060,7 +3060,7 @@ var DefaultConfig = &Config{
 								ClassGroupID: "rounded-t",
 							},
 						},
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isTshirtSize,
 								ClassGroupID: "rounded-t",
@@ -3073,7 +3073,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "rounded-t",
 					},
 					"r": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"none": {
 								ClassGroupID: "rounded-r",
 							},
@@ -3081,7 +3081,7 @@ var DefaultConfig = &Config{
 								ClassGroupID: "rounded-r",
 							},
 						},
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isTshirtSize,
 								ClassGroupID: "rounded-r",
@@ -3094,7 +3094,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "rounded-r",
 					},
 					"b": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"none": {
 								ClassGroupID: "rounded-b",
 							},
@@ -3102,7 +3102,7 @@ var DefaultConfig = &Config{
 								ClassGroupID: "rounded-b",
 							},
 						},
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isTshirtSize,
 								ClassGroupID: "rounded-b",
@@ -3115,7 +3115,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "rounded-b",
 					},
 					"l": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"none": {
 								ClassGroupID: "rounded-l",
 							},
@@ -3123,7 +3123,7 @@ var DefaultConfig = &Config{
 								ClassGroupID: "rounded-l",
 							},
 						},
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isTshirtSize,
 								ClassGroupID: "rounded-l",
@@ -3136,7 +3136,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "rounded-l",
 					},
 					"ss": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"none": {
 								ClassGroupID: "rounded-ss",
 							},
@@ -3144,7 +3144,7 @@ var DefaultConfig = &Config{
 								ClassGroupID: "rounded-ss",
 							},
 						},
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isTshirtSize,
 								ClassGroupID: "rounded-ss",
@@ -3157,7 +3157,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "rounded-ss",
 					},
 					"se": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"none": {
 								ClassGroupID: "rounded-se",
 							},
@@ -3165,7 +3165,7 @@ var DefaultConfig = &Config{
 								ClassGroupID: "rounded-se",
 							},
 						},
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isTshirtSize,
 								ClassGroupID: "rounded-se",
@@ -3178,7 +3178,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "rounded-se",
 					},
 					"ee": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"none": {
 								ClassGroupID: "rounded-ee",
 							},
@@ -3186,7 +3186,7 @@ var DefaultConfig = &Config{
 								ClassGroupID: "rounded-ee",
 							},
 						},
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isTshirtSize,
 								ClassGroupID: "rounded-ee",
@@ -3199,7 +3199,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "rounded-ee",
 					},
 					"es": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"none": {
 								ClassGroupID: "rounded-es",
 							},
@@ -3207,7 +3207,7 @@ var DefaultConfig = &Config{
 								ClassGroupID: "rounded-es",
 							},
 						},
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isTshirtSize,
 								ClassGroupID: "rounded-es",
@@ -3220,7 +3220,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "rounded-es",
 					},
 					"tl": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"none": {
 								ClassGroupID: "rounded-tl",
 							},
@@ -3228,7 +3228,7 @@ var DefaultConfig = &Config{
 								ClassGroupID: "rounded-tl",
 							},
 						},
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isTshirtSize,
 								ClassGroupID: "rounded-tl",
@@ -3241,7 +3241,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "rounded-tl",
 					},
 					"tr": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"none": {
 								ClassGroupID: "rounded-tr",
 							},
@@ -3249,7 +3249,7 @@ var DefaultConfig = &Config{
 								ClassGroupID: "rounded-tr",
 							},
 						},
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isTshirtSize,
 								ClassGroupID: "rounded-tr",
@@ -3262,7 +3262,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "rounded-tr",
 					},
 					"br": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"none": {
 								ClassGroupID: "rounded-br",
 							},
@@ -3270,7 +3270,7 @@ var DefaultConfig = &Config{
 								ClassGroupID: "rounded-br",
 							},
 						},
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isTshirtSize,
 								ClassGroupID: "rounded-br",
@@ -3283,7 +3283,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "rounded-br",
 					},
 					"bl": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"none": {
 								ClassGroupID: "rounded-bl",
 							},
@@ -3291,7 +3291,7 @@ var DefaultConfig = &Config{
 								ClassGroupID: "rounded-bl",
 							},
 						},
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isTshirtSize,
 								ClassGroupID: "rounded-bl",
@@ -3304,7 +3304,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "rounded-bl",
 					},
 				},
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isTshirtSize,
 						ClassGroupID: "rounded",
@@ -3317,9 +3317,9 @@ var DefaultConfig = &Config{
 				ClassGroupID: "rounded",
 			},
 			"border": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"x": {
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isLength,
 								ClassGroupID: "border-w-x",
@@ -3336,7 +3336,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "border-w-x",
 					},
 					"y": {
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isLength,
 								ClassGroupID: "border-w-y",
@@ -3353,7 +3353,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "border-w-y",
 					},
 					"s": {
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isLength,
 								ClassGroupID: "border-w-s",
@@ -3366,7 +3366,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "border-w-s",
 					},
 					"e": {
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isLength,
 								ClassGroupID: "border-w-e",
@@ -3379,7 +3379,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "border-w-e",
 					},
 					"t": {
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isLength,
 								ClassGroupID: "border-w-t",
@@ -3396,7 +3396,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "border-w-t",
 					},
 					"r": {
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isLength,
 								ClassGroupID: "border-w-r",
@@ -3413,7 +3413,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "border-w-r",
 					},
 					"b": {
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isLength,
 								ClassGroupID: "border-w-b",
@@ -3430,7 +3430,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "border-w-b",
 					},
 					"l": {
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isLength,
 								ClassGroupID: "border-w-l",
@@ -3447,7 +3447,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "border-w-l",
 					},
 					"opacity": {
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isNumber,
 								ClassGroupID: "border-opacity",
@@ -3484,9 +3484,9 @@ var DefaultConfig = &Config{
 						ClassGroupID: "border-collapse",
 					},
 					"spacing": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"x": {
-								Validators: []ClassGroupValidator{
+								Validators: []classGroupValidator{
 									{
 										Fn:           isArbitraryValue,
 										ClassGroupID: "border-spacing-x",
@@ -3502,7 +3502,7 @@ var DefaultConfig = &Config{
 								},
 							},
 							"y": {
-								Validators: []ClassGroupValidator{
+								Validators: []classGroupValidator{
 									{
 										Fn:           isArbitraryValue,
 										ClassGroupID: "border-spacing-y",
@@ -3518,7 +3518,7 @@ var DefaultConfig = &Config{
 								},
 							},
 						},
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isArbitraryValue,
 								ClassGroupID: "border-spacing",
@@ -3534,7 +3534,7 @@ var DefaultConfig = &Config{
 						},
 					},
 				},
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isLength,
 						ClassGroupID: "border-w",
@@ -3551,14 +3551,14 @@ var DefaultConfig = &Config{
 				ClassGroupID: "border-w",
 			},
 			"divide": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"x": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"reverse": {
 								ClassGroupID: "divide-x-reverse",
 							},
 						},
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isLength,
 								ClassGroupID: "divide-x",
@@ -3571,12 +3571,12 @@ var DefaultConfig = &Config{
 						ClassGroupID: "divide-x",
 					},
 					"y": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"reverse": {
 								ClassGroupID: "divide-y-reverse",
 							},
 						},
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isLength,
 								ClassGroupID: "divide-y",
@@ -3589,7 +3589,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "divide-y",
 					},
 					"opacity": {
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isNumber,
 								ClassGroupID: "divide-opacity",
@@ -3616,7 +3616,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "divide-style",
 					},
 				},
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isAny,
 						ClassGroupID: "divide-color",
@@ -3624,7 +3624,7 @@ var DefaultConfig = &Config{
 				},
 			},
 			"outline": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"solid": {
 						ClassGroupID: "outline-style",
 					},
@@ -3641,7 +3641,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "outline-style",
 					},
 					"offset": {
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isLength,
 								ClassGroupID: "outline-offset",
@@ -3653,7 +3653,7 @@ var DefaultConfig = &Config{
 						},
 					},
 				},
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isLength,
 						ClassGroupID: "outline-w",
@@ -3670,12 +3670,12 @@ var DefaultConfig = &Config{
 				ClassGroupID: "outline-style",
 			},
 			"ring": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"inset": {
 						ClassGroupID: "ring-w-inset",
 					},
 					"opacity": {
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isNumber,
 								ClassGroupID: "ring-opacity",
@@ -3687,7 +3687,7 @@ var DefaultConfig = &Config{
 						},
 					},
 					"offset": {
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isLength,
 								ClassGroupID: "ring-offset-w",
@@ -3703,7 +3703,7 @@ var DefaultConfig = &Config{
 						},
 					},
 				},
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isLength,
 						ClassGroupID: "ring-w",
@@ -3721,7 +3721,7 @@ var DefaultConfig = &Config{
 			},
 
 			"shadow": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"inner": {
 						ClassGroupID: "shadow",
 					},
@@ -3729,7 +3729,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "shadow",
 					},
 				},
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isTshirtSize,
 						ClassGroupID: "shadow",
@@ -3746,8 +3746,8 @@ var DefaultConfig = &Config{
 				ClassGroupID: "shadow",
 			},
 			"opacity": {
-				NextPart: map[string]ClassPart{},
-				Validators: []ClassGroupValidator{
+				NextPart: map[string]classPart{},
+				Validators: []classGroupValidator{
 					{
 						Fn:           isNumber,
 						ClassGroupID: "opacity",
@@ -3760,9 +3760,9 @@ var DefaultConfig = &Config{
 			},
 
 			"mix": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"blend": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"normal": {
 								ClassGroupID: "mix-blend",
 							},
@@ -3782,7 +3782,7 @@ var DefaultConfig = &Config{
 								ClassGroupID: "mix-blend",
 							},
 							"color": {
-								NextPart: map[string]ClassPart{
+								NextPart: map[string]classPart{
 									"dodge": {
 										ClassGroupID: "mix-blend",
 									},
@@ -3793,14 +3793,14 @@ var DefaultConfig = &Config{
 								ClassGroupID: "mix-blend",
 							},
 							"hard": {
-								NextPart: map[string]ClassPart{
+								NextPart: map[string]classPart{
 									"light": {
 										ClassGroupID: "mix-blend",
 									},
 								},
 							},
 							"soft": {
-								NextPart: map[string]ClassPart{
+								NextPart: map[string]classPart{
 									"light": {
 										ClassGroupID: "mix-blend",
 									},
@@ -3822,7 +3822,7 @@ var DefaultConfig = &Config{
 								ClassGroupID: "mix-blend",
 							},
 							"plus": {
-								NextPart: map[string]ClassPart{
+								NextPart: map[string]classPart{
 									"lighter": {
 										ClassGroupID: "mix-blend",
 									},
@@ -3833,7 +3833,7 @@ var DefaultConfig = &Config{
 				},
 			},
 			"filter": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"none": {
 						ClassGroupID: "filter",
 					},
@@ -3841,12 +3841,12 @@ var DefaultConfig = &Config{
 				ClassGroupID: "filter",
 			},
 			"blur": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"none": {
 						ClassGroupID: "blur",
 					},
 				},
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isTshirtSize,
 						ClassGroupID: "blur",
@@ -3860,8 +3860,8 @@ var DefaultConfig = &Config{
 			},
 
 			"brightness": {
-				NextPart: map[string]ClassPart{},
-				Validators: []ClassGroupValidator{
+				NextPart: map[string]classPart{},
+				Validators: []classGroupValidator{
 					{
 						Fn:           isNumber,
 						ClassGroupID: "brightness",
@@ -3875,8 +3875,8 @@ var DefaultConfig = &Config{
 			},
 
 			"contrast": {
-				NextPart: map[string]ClassPart{},
-				Validators: []ClassGroupValidator{
+				NextPart: map[string]classPart{},
+				Validators: []classGroupValidator{
 					{
 						Fn:           isNumber,
 						ClassGroupID: "contrast",
@@ -3890,14 +3890,14 @@ var DefaultConfig = &Config{
 			},
 
 			"drop": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"shadow": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"none": {
 								ClassGroupID: "drop-shadow",
 							},
 						},
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isTshirtSize,
 								ClassGroupID: "drop-shadow",
@@ -3913,12 +3913,12 @@ var DefaultConfig = &Config{
 			},
 
 			"grayscale": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"0": {
 						ClassGroupID: "grayscale",
 					},
 				},
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isArbitraryValue,
 						ClassGroupID: "grayscale",
@@ -3928,9 +3928,9 @@ var DefaultConfig = &Config{
 			},
 
 			"hue": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"rotate": {
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isNumber,
 								ClassGroupID: "hue-rotate",
@@ -3944,9 +3944,9 @@ var DefaultConfig = &Config{
 				},
 			},
 			"invert": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"0": {
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isArbitraryValue,
 								ClassGroupID: "invert",
@@ -3959,8 +3959,8 @@ var DefaultConfig = &Config{
 			},
 
 			"saturate": {
-				NextPart: map[string]ClassPart{},
-				Validators: []ClassGroupValidator{
+				NextPart: map[string]classPart{},
+				Validators: []classGroupValidator{
 					{
 						Fn:           isNumber,
 						ClassGroupID: "saturate",
@@ -3974,9 +3974,9 @@ var DefaultConfig = &Config{
 			},
 
 			"sepia": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"0": {
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isArbitraryValue,
 								ClassGroupID: "sepia",
@@ -3989,9 +3989,9 @@ var DefaultConfig = &Config{
 			},
 
 			"backdrop": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"filter": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"none": {
 								ClassGroupID: "backdrop-filter",
 							},
@@ -3999,12 +3999,12 @@ var DefaultConfig = &Config{
 						ClassGroupID: "backdrop-filter",
 					},
 					"blur": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"none": {
 								ClassGroupID: "backdrop-blur",
 							},
 						},
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isTshirtSize,
 								ClassGroupID: "backdrop-blur",
@@ -4017,7 +4017,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "backdrop-blur",
 					},
 					"brightness": {
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isNumber,
 								ClassGroupID: "backdrop-brightness",
@@ -4030,7 +4030,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "backdrop-brightness",
 					},
 					"contrast": {
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isNumber,
 								ClassGroupID: "backdrop-contrast",
@@ -4043,12 +4043,12 @@ var DefaultConfig = &Config{
 						ClassGroupID: "backdrop-contrast",
 					},
 					"grayscale": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"0": {
 								ClassGroupID: "backdrop-grayscale",
 							},
 						},
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isArbitraryValue,
 								ClassGroupID: "backdrop-grayscale",
@@ -4057,9 +4057,9 @@ var DefaultConfig = &Config{
 						ClassGroupID: "backdrop-grayscale",
 					},
 					"hue": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"rotate": {
-								Validators: []ClassGroupValidator{
+								Validators: []classGroupValidator{
 									{
 										Fn:           isNumber,
 										ClassGroupID: "backdrop-hue-rotate",
@@ -4071,12 +4071,12 @@ var DefaultConfig = &Config{
 								},
 							},
 						},
-						Validators: []ClassGroupValidator{},
+						Validators: []classGroupValidator{},
 					},
 					"invert": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"0": {
-								Validators: []ClassGroupValidator{
+								Validators: []classGroupValidator{
 									{
 										Fn:           isArbitraryValue,
 										ClassGroupID: "backdrop-invert",
@@ -4085,11 +4085,11 @@ var DefaultConfig = &Config{
 								ClassGroupID: "backdrop-invert",
 							},
 						},
-						Validators:   []ClassGroupValidator{},
+						Validators:   []classGroupValidator{},
 						ClassGroupID: "backdrop-invert",
 					},
 					"opacity": {
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isNumber,
 								ClassGroupID: "backdrop-opacity",
@@ -4102,7 +4102,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "backdrop-opacity",
 					},
 					"saturate": {
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isNumber,
 								ClassGroupID: "backdrop-saturate",
@@ -4115,9 +4115,9 @@ var DefaultConfig = &Config{
 						ClassGroupID: "backdrop-saturate",
 					},
 					"sepia": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"0": {
-								Validators: []ClassGroupValidator{
+								Validators: []classGroupValidator{
 									{
 										Fn:           isArbitraryValue,
 										ClassGroupID: "backdrop-sepia",
@@ -4131,7 +4131,7 @@ var DefaultConfig = &Config{
 				},
 			},
 			"caption": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"top": {
 						ClassGroupID: "caption",
 					},
@@ -4139,10 +4139,10 @@ var DefaultConfig = &Config{
 						ClassGroupID: "caption",
 					},
 				},
-				Validators: []ClassGroupValidator{},
+				Validators: []classGroupValidator{},
 			},
 			"transition": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"none": {
 						ClassGroupID: "transition",
 					},
@@ -4162,7 +4162,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "transition",
 					},
 				},
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isArbitraryValue,
 						ClassGroupID: "transition",
@@ -4171,7 +4171,7 @@ var DefaultConfig = &Config{
 				ClassGroupID: "transition",
 			},
 			"duration": {
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isNumber,
 						ClassGroupID: "duration",
@@ -4183,12 +4183,12 @@ var DefaultConfig = &Config{
 				},
 			},
 			"ease": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"linear": {
 						ClassGroupID: "ease",
 					},
 					"in": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"out": {
 								ClassGroupID: "ease",
 							},
@@ -4199,7 +4199,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "ease",
 					},
 				},
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isArbitraryValue,
 						ClassGroupID: "ease",
@@ -4207,7 +4207,7 @@ var DefaultConfig = &Config{
 				},
 			},
 			"delay": {
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isNumber,
 						ClassGroupID: "delay",
@@ -4219,7 +4219,7 @@ var DefaultConfig = &Config{
 				},
 			},
 			"animate": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"none": {
 						ClassGroupID: "animate",
 					},
@@ -4236,7 +4236,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "animate",
 					},
 				},
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isArbitraryValue,
 						ClassGroupID: "animate",
@@ -4244,7 +4244,7 @@ var DefaultConfig = &Config{
 				},
 			},
 			"transform": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"gpu": {
 						ClassGroupID: "transform",
 					},
@@ -4255,9 +4255,9 @@ var DefaultConfig = &Config{
 				ClassGroupID: "transform",
 			},
 			"scale": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"x": {
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isNumber,
 								ClassGroupID: "scale-x",
@@ -4269,7 +4269,7 @@ var DefaultConfig = &Config{
 						},
 					},
 					"y": {
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isNumber,
 								ClassGroupID: "scale-y",
@@ -4281,7 +4281,7 @@ var DefaultConfig = &Config{
 						},
 					},
 				},
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isNumber,
 						ClassGroupID: "scale",
@@ -4293,7 +4293,7 @@ var DefaultConfig = &Config{
 				},
 			},
 			"rotate": {
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isInteger,
 						ClassGroupID: "rotate",
@@ -4305,9 +4305,9 @@ var DefaultConfig = &Config{
 				},
 			},
 			"translate": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"x": {
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isArbitraryValue,
 								ClassGroupID: "translate-x",
@@ -4323,7 +4323,7 @@ var DefaultConfig = &Config{
 						},
 					},
 					"y": {
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isArbitraryValue,
 								ClassGroupID: "translate-y",
@@ -4341,9 +4341,9 @@ var DefaultConfig = &Config{
 				},
 			},
 			"skew": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"x": {
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isNumber,
 								ClassGroupID: "skew-x",
@@ -4355,7 +4355,7 @@ var DefaultConfig = &Config{
 						},
 					},
 					"y": {
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isNumber,
 								ClassGroupID: "skew-y",
@@ -4369,12 +4369,12 @@ var DefaultConfig = &Config{
 				},
 			},
 			"origin": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"center": {
 						ClassGroupID: "transform-origin",
 					},
 					"top": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"right": {
 								ClassGroupID: "transform-origin",
 							},
@@ -4388,7 +4388,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "transform-origin",
 					},
 					"bottom": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"right": {
 								ClassGroupID: "transform-origin",
 							},
@@ -4402,7 +4402,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "transform-origin",
 					},
 				},
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isArbitraryValue,
 						ClassGroupID: "transform-origin",
@@ -4410,14 +4410,14 @@ var DefaultConfig = &Config{
 				},
 			},
 			"accent": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"auto": {
-						NextPart:     map[string]ClassPart{},
-						Validators:   []ClassGroupValidator{},
+						NextPart:     map[string]classPart{},
+						Validators:   []classGroupValidator{},
 						ClassGroupID: "accent",
 					},
 				},
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isAny,
 						ClassGroupID: "accent",
@@ -4425,7 +4425,7 @@ var DefaultConfig = &Config{
 				},
 			},
 			"appearance": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"none": {
 						ClassGroupID: "appearance",
 					},
@@ -4435,7 +4435,7 @@ var DefaultConfig = &Config{
 				},
 			},
 			"cursor": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"auto": {
 						ClassGroupID: "cursor",
 					},
@@ -4458,7 +4458,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "cursor",
 					},
 					"not": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"allowed": {
 								ClassGroupID: "cursor",
 							},
@@ -4468,7 +4468,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "cursor",
 					},
 					"context": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"menu": {
 								ClassGroupID: "cursor",
 							},
@@ -4484,7 +4484,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "cursor",
 					},
 					"vertical": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"text": {
 								ClassGroupID: "cursor",
 							},
@@ -4497,7 +4497,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "cursor",
 					},
 					"no": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"drop": {
 								ClassGroupID: "cursor",
 							},
@@ -4510,112 +4510,112 @@ var DefaultConfig = &Config{
 						ClassGroupID: "cursor",
 					},
 					"all": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"scroll": {
 								ClassGroupID: "cursor",
 							},
 						},
 					},
 					"col": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"resize": {
 								ClassGroupID: "cursor",
 							},
 						},
 					},
 					"row": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"resize": {
 								ClassGroupID: "cursor",
 							},
 						},
 					},
 					"n": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"resize": {
 								ClassGroupID: "cursor",
 							},
 						},
 					},
 					"e": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"resize": {
 								ClassGroupID: "cursor",
 							},
 						},
 					},
 					"s": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"resize": {
 								ClassGroupID: "cursor",
 							},
 						},
 					},
 					"w": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"resize": {
 								ClassGroupID: "cursor",
 							},
 						},
 					},
 					"ne": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"resize": {
 								ClassGroupID: "cursor",
 							},
 						},
 					},
 					"nw": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"resize": {
 								ClassGroupID: "cursor",
 							},
 						},
 					},
 					"se": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"resize": {
 								ClassGroupID: "cursor",
 							},
 						},
 					},
 					"sw": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"resize": {
 								ClassGroupID: "cursor",
 							},
 						},
 					},
 					"ew": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"resize": {
 								ClassGroupID: "cursor",
 							},
 						},
 					},
 					"ns": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"resize": {
 								ClassGroupID: "cursor",
 							},
 						},
 					},
 					"nesw": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"resize": {
 								ClassGroupID: "cursor",
 							},
 						},
 					},
 					"nwse": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"resize": {
 								ClassGroupID: "cursor",
 							},
 						},
 					},
 					"zoom": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"in": {
 								ClassGroupID: "cursor",
 							},
@@ -4625,7 +4625,7 @@ var DefaultConfig = &Config{
 						},
 					},
 				},
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isArbitraryValue,
 						ClassGroupID: "cursor",
@@ -4633,8 +4633,8 @@ var DefaultConfig = &Config{
 				},
 			},
 			"caret": {
-				NextPart: map[string]ClassPart{},
-				Validators: []ClassGroupValidator{
+				NextPart: map[string]classPart{},
+				Validators: []classGroupValidator{
 					{
 						Fn:           isAny,
 						ClassGroupID: "caret-color",
@@ -4642,9 +4642,9 @@ var DefaultConfig = &Config{
 				},
 			},
 			"pointer": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"events": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"none": {
 								ClassGroupID: "pointer-events",
 							},
@@ -4656,7 +4656,7 @@ var DefaultConfig = &Config{
 				},
 			},
 			"resize": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"none": {
 						ClassGroupID: "resize",
 					},
@@ -4670,7 +4670,7 @@ var DefaultConfig = &Config{
 				ClassGroupID: "resize",
 			},
 			"scroll": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"auto": {
 						ClassGroupID: "scroll-behavior",
 					},
@@ -4678,7 +4678,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "scroll-behavior",
 					},
 					"m": {
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isArbitraryValue,
 								ClassGroupID: "scroll-m",
@@ -4694,7 +4694,7 @@ var DefaultConfig = &Config{
 						},
 					},
 					"mx": {
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isArbitraryValue,
 								ClassGroupID: "scroll-mx",
@@ -4710,7 +4710,7 @@ var DefaultConfig = &Config{
 						},
 					},
 					"my": {
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isArbitraryValue,
 								ClassGroupID: "scroll-my",
@@ -4726,7 +4726,7 @@ var DefaultConfig = &Config{
 						},
 					},
 					"ms": {
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isArbitraryValue,
 								ClassGroupID: "scroll-ms",
@@ -4742,7 +4742,7 @@ var DefaultConfig = &Config{
 						},
 					},
 					"me": {
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isArbitraryValue,
 								ClassGroupID: "scroll-me",
@@ -4758,7 +4758,7 @@ var DefaultConfig = &Config{
 						},
 					},
 					"mt": {
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isArbitraryValue,
 								ClassGroupID: "scroll-mt",
@@ -4774,7 +4774,7 @@ var DefaultConfig = &Config{
 						},
 					},
 					"mr": {
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isArbitraryValue,
 								ClassGroupID: "scroll-mr",
@@ -4790,7 +4790,7 @@ var DefaultConfig = &Config{
 						},
 					},
 					"mb": {
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isArbitraryValue,
 								ClassGroupID: "scroll-mb",
@@ -4806,7 +4806,7 @@ var DefaultConfig = &Config{
 						},
 					},
 					"ml": {
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isArbitraryValue,
 								ClassGroupID: "scroll-ml",
@@ -4822,7 +4822,7 @@ var DefaultConfig = &Config{
 						},
 					},
 					"p": {
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isArbitraryValue,
 								ClassGroupID: "scroll-p",
@@ -4838,7 +4838,7 @@ var DefaultConfig = &Config{
 						},
 					},
 					"px": {
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isArbitraryValue,
 								ClassGroupID: "scroll-px",
@@ -4854,7 +4854,7 @@ var DefaultConfig = &Config{
 						},
 					},
 					"py": {
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isArbitraryValue,
 								ClassGroupID: "scroll-py",
@@ -4870,7 +4870,7 @@ var DefaultConfig = &Config{
 						},
 					},
 					"ps": {
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isArbitraryValue,
 								ClassGroupID: "scroll-ps",
@@ -4886,7 +4886,7 @@ var DefaultConfig = &Config{
 						},
 					},
 					"pe": {
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isArbitraryValue,
 								ClassGroupID: "scroll-pe",
@@ -4902,7 +4902,7 @@ var DefaultConfig = &Config{
 						},
 					},
 					"pt": {
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isArbitraryValue,
 								ClassGroupID: "scroll-pt",
@@ -4918,7 +4918,7 @@ var DefaultConfig = &Config{
 						},
 					},
 					"pr": {
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isArbitraryValue,
 								ClassGroupID: "scroll-pr",
@@ -4934,7 +4934,7 @@ var DefaultConfig = &Config{
 						},
 					},
 					"pb": {
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isArbitraryValue,
 								ClassGroupID: "scroll-pb",
@@ -4950,7 +4950,7 @@ var DefaultConfig = &Config{
 						},
 					},
 					"pl": {
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isArbitraryValue,
 								ClassGroupID: "scroll-pl",
@@ -4968,7 +4968,7 @@ var DefaultConfig = &Config{
 				},
 			},
 			"snap": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"start": {
 						ClassGroupID: "snap-align",
 					},
@@ -4979,7 +4979,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "snap-align",
 					},
 					"align": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"none": {
 								ClassGroupID: "snap-align",
 							},
@@ -5012,7 +5012,7 @@ var DefaultConfig = &Config{
 				},
 			},
 			"touch": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"auto": {
 						ClassGroupID: "touch",
 					},
@@ -5023,7 +5023,7 @@ var DefaultConfig = &Config{
 						ClassGroupID: "touch",
 					},
 					"pan": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"x": {
 								ClassGroupID: "touch-x",
 							},
@@ -5045,7 +5045,7 @@ var DefaultConfig = &Config{
 						},
 					},
 					"pinch": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"zoom": {
 								ClassGroupID: "touch-pz",
 							},
@@ -5054,7 +5054,7 @@ var DefaultConfig = &Config{
 				},
 			},
 			"select": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"none": {
 						ClassGroupID: "select",
 					},
@@ -5068,12 +5068,12 @@ var DefaultConfig = &Config{
 						ClassGroupID: "select",
 					},
 				},
-				Validators: []ClassGroupValidator{},
+				Validators: []classGroupValidator{},
 			},
 			"will": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"change": {
-						NextPart: map[string]ClassPart{
+						NextPart: map[string]classPart{
 							"auto": {
 								ClassGroupID: "will-change",
 							},
@@ -5087,7 +5087,7 @@ var DefaultConfig = &Config{
 								ClassGroupID: "will-change",
 							},
 						},
-						Validators: []ClassGroupValidator{
+						Validators: []classGroupValidator{
 							{
 								Fn:           isArbitraryValue,
 								ClassGroupID: "will-change",
@@ -5097,12 +5097,12 @@ var DefaultConfig = &Config{
 				},
 			},
 			"fill": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"none": {
 						ClassGroupID: "fill",
 					},
 				},
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isAny,
 						ClassGroupID: "fill",
@@ -5110,12 +5110,12 @@ var DefaultConfig = &Config{
 				},
 			},
 			"stroke": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"none": {
 						ClassGroupID: "stroke",
 					},
 				},
-				Validators: []ClassGroupValidator{
+				Validators: []classGroupValidator{
 					{
 						Fn:           isLength,
 						ClassGroupID: "stroke-w",
@@ -5135,16 +5135,16 @@ var DefaultConfig = &Config{
 				},
 			},
 			"sr": {
-				NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{
 					"only": {
 						ClassGroupID: "sr",
 					},
 				},
 			},
 			"forced": {
-				NextPart: map[string]ClassPart{"color": {
-					NextPart: map[string]ClassPart{"adjust": {
-						NextPart: map[string]ClassPart{
+				NextPart: map[string]classPart{"color": {
+					NextPart: map[string]classPart{"adjust": {
+						NextPart: map[string]classPart{
 							"auto": {
 								ClassGroupID: "forced-color-adjust",
 							},

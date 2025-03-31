@@ -1,0 +1,158 @@
+package pages
+
+import (
+	"github.com/conneroisu/twerge"
+	"github.com/conneroisu/twerge/examples/complex-webapp/components"
+	"github.com/conneroisu/twerge/examples/complex-webapp/layouts"
+	"github.com/conneroisu/twerge/examples/complex-webapp/models"
+)
+
+// Helper function to get cart item count
+func cartItemCount(user models.User) int {
+	if user.ID != "" {
+		return len(models.MockData.UserCart.Items)
+	}
+	return 0
+}
+
+templ HomePage(user models.User, featuredProducts []models.Product) {
+	@layouts.Base("Home", user, cartItemCount(user)) {
+		<!-- Hero Section -->
+		<div class={ twerge.RuntimeGenerate("bg-indigo-600") }>
+			<div class="tw-container">
+				<div class={ twerge.RuntimeGenerate("py-12 md:py-20 px-4 sm:px-6 lg:px-8 text-center") }>
+					<h1 class={ twerge.RuntimeGenerate("text-4xl tracking-tight font-extrabold text-white sm:text-5xl md:text-6xl") }>
+						<span class={ twerge.RuntimeGenerate("block") }>Premium Tech Accessories</span>
+						<span class={ twerge.RuntimeGenerate("block text-indigo-200") }>For Your Digital Life</span>
+					</h1>
+					<p class={ twerge.RuntimeGenerate("mt-3 max-w-md mx-auto text-base text-indigo-200 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl") }>
+						Quality products that enhance your tech experience. From keyboards to monitors, we've got everything you need.
+					</p>
+					<div class={ twerge.RuntimeGenerate("mt-10 max-w-md mx-auto sm:flex sm:justify-center md:mt-12") }>
+						<div class={ twerge.RuntimeGenerate("rounded-md shadow") }>
+							<a href="/products" class={ twerge.RuntimeGenerate("w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-800 hover:bg-indigo-700 md:py-4 md:text-lg md:px-10") }>
+								Shop Now
+							</a>
+						</div>
+						<div class={ twerge.RuntimeGenerate("mt-3 rounded-md shadow sm:mt-0 sm:ml-3") }>
+							<a href="/about" class={ twerge.RuntimeGenerate("w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-indigo-700 bg-white hover:bg-gray-50 md:py-4 md:text-lg md:px-10") }>
+								Learn More
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<!-- Featured Products Section -->
+		<div class="tw-section">
+			<div class="tw-container">
+				<div class={ twerge.RuntimeGenerate("text-center mb-12") }>
+					<h2 class={ twerge.RuntimeGenerate("text-3xl font-extrabold text-gray-900") }>Featured Products</h2>
+					<p class={ twerge.RuntimeGenerate("mt-4 max-w-2xl text-xl text-gray-500 mx-auto") }>
+						Our most popular items, chosen by our customers.
+					</p>
+				</div>
+				
+				<div class="tw-grid-cards">
+					for _, product := range featuredProducts {
+						@components.ProductCard(product)
+					}
+				</div>
+				
+				<div class={ twerge.RuntimeGenerate("mt-12 text-center") }>
+					<a href="/products" class={ twerge.RuntimeGenerate("inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700") }>
+						View All Products
+					</a>
+				</div>
+			</div>
+		</div>
+		
+		<!-- Categories Section -->
+		<div class={ twerge.RuntimeGenerate("py-12 bg-gray-50") }>
+			<div class="tw-container">
+				<div class={ twerge.RuntimeGenerate("text-center mb-12") }>
+					<h2 class={ twerge.RuntimeGenerate("text-3xl font-extrabold text-gray-900") }>Shop by Category</h2>
+				</div>
+				
+				<div class={ twerge.RuntimeGenerate("grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3") }>
+					<a href="/products?category=electronics" class={ twerge.RuntimeGenerate("group") }>
+						<div class={ twerge.RuntimeGenerate("relative overflow-hidden rounded-lg bg-white shadow hover:shadow-md transition-shadow") }>
+							<div class={ twerge.RuntimeGenerate("aspect-h-1 aspect-w-2 overflow-hidden") }>
+								<img src="https://via.placeholder.com/400x200?text=Electronics" alt="Electronics" class={ twerge.RuntimeGenerate("h-48 w-full object-cover object-center group-hover:opacity-75") } />
+							</div>
+							<div class={ twerge.RuntimeGenerate("p-6") }>
+								<h3 class={ twerge.RuntimeGenerate("text-xl font-semibold text-gray-900") }>Electronics</h3>
+								<p class={ twerge.RuntimeGenerate("mt-1 text-sm text-gray-500") }>Keyboards, mice, monitors and more.</p>
+							</div>
+						</div>
+					</a>
+					
+					<a href="/products?category=accessories" class={ twerge.RuntimeGenerate("group") }>
+						<div class={ twerge.RuntimeGenerate("relative overflow-hidden rounded-lg bg-white shadow hover:shadow-md transition-shadow") }>
+							<div class={ twerge.RuntimeGenerate("aspect-h-1 aspect-w-2 overflow-hidden") }>
+								<img src="https://via.placeholder.com/400x200?text=Accessories" alt="Accessories" class={ twerge.RuntimeGenerate("h-48 w-full object-cover object-center group-hover:opacity-75") } />
+							</div>
+							<div class={ twerge.RuntimeGenerate("p-6") }>
+								<h3 class={ twerge.RuntimeGenerate("text-xl font-semibold text-gray-900") }>Accessories</h3>
+								<p class={ twerge.RuntimeGenerate("mt-1 text-sm text-gray-500") }>Cables, adapters, cases and more.</p>
+							</div>
+						</div>
+					</a>
+					
+					<a href="/products?category=home" class={ twerge.RuntimeGenerate("group") }>
+						<div class={ twerge.RuntimeGenerate("relative overflow-hidden rounded-lg bg-white shadow hover:shadow-md transition-shadow") }>
+							<div class={ twerge.RuntimeGenerate("aspect-h-1 aspect-w-2 overflow-hidden") }>
+								<img src="https://via.placeholder.com/400x200?text=Home+Tech" alt="Home Tech" class={ twerge.RuntimeGenerate("h-48 w-full object-cover object-center group-hover:opacity-75") } />
+							</div>
+							<div class={ twerge.RuntimeGenerate("p-6") }>
+								<h3 class={ twerge.RuntimeGenerate("text-xl font-semibold text-gray-900") }>Home Tech</h3>
+								<p class={ twerge.RuntimeGenerate("mt-1 text-sm text-gray-500") }>Smart devices, lighting and more.</p>
+							</div>
+						</div>
+					</a>
+				</div>
+			</div>
+		</div>
+		
+		<!-- Newsletter Section -->
+		<div class={ twerge.RuntimeGenerate("bg-white") }>
+			<div class="tw-container">
+				<div class={ twerge.RuntimeGenerate("py-12 px-4 sm:px-6 lg:py-16 lg:px-8") }>
+					<div class={ twerge.RuntimeGenerate("rounded-lg bg-indigo-700 px-6 py-6 md:py-12 md:px-12 lg:py-16 lg:px-16 xl:flex xl:items-center") }>
+						<div class={ twerge.RuntimeGenerate("xl:w-0 xl:flex-1") }>
+							<h2 class={ twerge.RuntimeGenerate("text-2xl font-extrabold tracking-tight text-white sm:text-3xl") }>Subscribe to our newsletter</h2>
+							<p class={ twerge.RuntimeGenerate("mt-3 max-w-3xl text-lg leading-6 text-indigo-200") }>
+								Stay updated with our latest products and exclusive offers.
+							</p>
+						</div>
+						<div class={ twerge.RuntimeGenerate("mt-8 sm:w-full sm:max-w-md xl:mt-0 xl:ml-8") }>
+							<form class={ twerge.RuntimeGenerate("sm:flex") }>
+								<label for="email-address" class={ twerge.RuntimeGenerate("sr-only") }>Email address</label>
+								<input 
+									id="email-address" 
+									name="email" 
+									type="email" 
+									autocomplete="email" 
+									required 
+									class={ twerge.RuntimeGenerate("w-full border-white px-5 py-3 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-indigo-700 focus:ring-white rounded-md") } 
+									placeholder="Enter your email" 
+								/>
+								<button 
+									type="submit" 
+									class={ twerge.RuntimeGenerate("mt-3 w-full flex items-center justify-center px-5 py-3 border border-transparent shadow text-base font-medium rounded-md text-indigo-600 bg-white hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-indigo-700 focus:ring-white sm:mt-0 sm:ml-3 sm:w-auto sm:flex-shrink-0") }
+								>
+									Subscribe
+								</button>
+							</form>
+							<p class={ twerge.RuntimeGenerate("mt-3 text-sm text-indigo-200") }>
+								We care about your data. Read our 
+								<a href="/privacy" class={ twerge.RuntimeGenerate("text-white font-medium underline") }>Privacy Policy</a>.
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	}
+}

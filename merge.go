@@ -8,6 +8,7 @@ import (
 
 var (
 	// Merge is the default template merger
+	// It takes a space-delimited string of TailwindCSS classes and returns a merged string
 	Merge        = createTwMerge(nil, nil)
 	splitPattern = regexp.MustCompile(splitClassesRegex)
 )
@@ -15,11 +16,11 @@ var (
 // splitClassesRegex is the regex used to split classes
 const splitClassesRegex = `\s+`
 
-// TwMergeFn is the type of the template merger.
-type TwMergeFn func(args ...string) string
+// twMergeFn is the type of the template merger.
+type twMergeFn func(classes string) string
 
-// SplitModifiersFn is the type of the function used to split modifiers
-type SplitModifiersFn = func(string) (
+// splitModifiersFn is the type of the function used to split modifiers
+type splitModifiersFn = func(string) (
 	baseClass string,
 	modifiers []string,
 	hasImportant bool,
@@ -28,18 +29,18 @@ type SplitModifiersFn = func(string) (
 
 // createTwMerge creates a new template merger
 func createTwMerge(
-	config *Config,
+	config *config,
 	cache icache,
-) TwMergeFn {
+) twMergeFn {
 	var (
-		fnToCall        TwMergeFn
-		splitModifiers  SplitModifiersFn
-		getClassGroupID GetClassGroupIDFn
+		fnToCall        twMergeFn
+		splitModifiers  splitModifiersFn
+		getClassGroupID getClassGroupIDFn
 		mergeClassList  func(classList string) string
 	)
 
-	merger := func(args ...string) string {
-		classList := strings.TrimSpace(strings.Join(args, " "))
+	merger := func(classes string) string {
+		classList := strings.TrimSpace(classes)
 		if classList == "" {
 			return ""
 		}
@@ -53,35 +54,35 @@ func createTwMerge(
 		return merged
 	}
 
-	init := func(args ...string) string {
+	init := func(classes string) string {
 		if config == nil {
-			config = DefaultConfig
+			config = defaultConfig
 		}
 		if cache == nil {
 			cache = newCache(config.MaxCacheSize)
 		}
 
-		splitModifiers = MakeSplitModifiers(config)
+		splitModifiers = makeSplitModifiers(config)
 
-		getClassGroupID = MakeGetClassGroupID(config)
+		getClassGroupID = makeGetClassGroupID(config)
 
-		mergeClassList = MakeMergeClassList(config, splitModifiers, getClassGroupID)
+		mergeClassList = makeMergeClassList(config, splitModifiers, getClassGroupID)
 
 		fnToCall = merger
-		return fnToCall(args...)
+		return fnToCall(classes)
 	}
 
 	fnToCall = init
-	return func(args ...string) string {
-		return fnToCall(args...)
+	return func(classes string) string {
+		return fnToCall(classes)
 	}
 }
 
-// MakeMergeClassList creates a function that merges a class list
-func MakeMergeClassList(
-	conf *Config,
-	splitModifiers SplitModifiersFn,
-	getClassGroupID GetClassGroupIDFn,
+// makeMergeClassList creates a function that merges a class list
+func makeMergeClassList(
+	conf *config,
+	splitModifiers splitModifiersFn,
+	getClassGroupID getClassGroupIDFn,
 ) func(classList string) string {
 	return func(classList string) string {
 		classes := splitPattern.Split(strings.TrimSpace(classList), -1)
@@ -101,7 +102,7 @@ func MakeMergeClassList(
 				continue
 			}
 			// we have to sort the modifiers bc hover:focus:bg-red-500 == focus:hover:bg-red-500
-			modifiers = SortModifiers(modifiers)
+			modifiers = sortModifiers(modifiers)
 			if hasImportant {
 				modifiers = append(modifiers, "!")
 			}
@@ -128,10 +129,10 @@ func MakeMergeClassList(
 
 }
 
-// SortModifiers Sorts modifiers according to following schema:
+// sortModifiers Sorts modifiers according to following schema:
 // - Predefined modifiers are sorted alphabetically
 // - When an arbitrary variant appears, it must be preserved which modifiers are before and after it
-func SortModifiers(modifiers []string) []string {
+func sortModifiers(modifiers []string) []string {
 	if len(modifiers) < 2 {
 		return modifiers
 	}
@@ -157,8 +158,8 @@ func SortModifiers(modifiers []string) []string {
 	return sorted
 }
 
-// MakeSplitModifiers creates a function that splits modifiers
-func MakeSplitModifiers(conf *Config) SplitModifiersFn {
+// makeSplitModifiers creates a function that splits modifiers
+func makeSplitModifiers(conf *config) splitModifiersFn {
 	separator := conf.ModifierSeparator
 
 	return func(className string) (string, []string, bool, int) {
