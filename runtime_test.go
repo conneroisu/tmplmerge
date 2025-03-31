@@ -67,7 +67,10 @@ func TestGetRuntimeClassHTML(t *testing.T) {
 	assert.Contains(t, html, ".tw-test1 { @apply ", "HTML should contain the generated class name")
 	assert.Contains(t, html, ".tw-test2 { @apply ", "HTML should contain the generated class name")
 	assert.Contains(t, html, "bg-blue-500", "HTML should contain the original classes")
-	assert.Contains(t, html, "p-4 m-2", "HTML should contain the original classes")
+	
+	// Check for either p-4 m-2 or m-2 p-4 since the order might change
+	assert.True(t, strings.Contains(html, "p-4 m-2") || strings.Contains(html, "m-2 p-4"), 
+		"HTML should contain the original classes in some order")
 }
 
 func TestInitWithCommonClasses(t *testing.T) {
