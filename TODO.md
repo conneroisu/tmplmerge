@@ -1,2 +1,2 @@
-- [ ] map codegen mvp (`map[string]string`) 
+- [ ] map codegen mvp (`map[string]string`)
 - [ ] replace regex with more performant solution

@@ -5142,21 +5142,19 @@ var DefaultConfig = &Config{
 				},
 			},
 			"forced": {
-				NextPart: map[string]ClassPart{
-					"color": {
+				NextPart: map[string]ClassPart{"color": {
+					NextPart: map[string]ClassPart{"adjust": {
 						NextPart: map[string]ClassPart{
-							"adjust": {
-								NextPart: map[string]ClassPart{
-									"auto": {
-										ClassGroupID: "forced-color-adjust",
-									},
-									"none": {
-										ClassGroupID: "forced-color-adjust",
-									},
-								},
+							"auto": {
+								ClassGroupID: "forced-color-adjust",
+							},
+							"none": {
+								ClassGroupID: "forced-color-adjust",
 							},
 						},
 					},
+					},
+				},
 				},
 			},
 		},
