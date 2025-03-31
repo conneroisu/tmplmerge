@@ -8,12 +8,12 @@ import (
 
 var (
 	// Merge is the default template merger
-	Merge        = CreateTwMerge(nil, nil)
-	splitPattern = regexp.MustCompile(SplitClassesRegex)
+	Merge        = createTwMerge(nil, nil)
+	splitPattern = regexp.MustCompile(splitClassesRegex)
 )
 
-// SplitClassesRegex is the regex used to split classes
-const SplitClassesRegex = `\s+`
+// splitClassesRegex is the regex used to split classes
+const splitClassesRegex = `\s+`
 
 // TwMergeFn is the type of the template merger.
 type TwMergeFn func(args ...string) string
@@ -26,10 +26,10 @@ type SplitModifiersFn = func(string) (
 	maybePostfixModPosition int,
 )
 
-// CreateTwMerge creates a new template merger
-func CreateTwMerge(
+// createTwMerge creates a new template merger
+func createTwMerge(
 	config *Config,
-	cache ICache,
+	cache icache,
 ) TwMergeFn {
 	var (
 		fnToCall        TwMergeFn
@@ -58,7 +58,7 @@ func CreateTwMerge(
 			config = DefaultConfig
 		}
 		if cache == nil {
-			cache = Make(config.MaxCacheSize)
+			cache = newCache(config.MaxCacheSize)
 		}
 
 		splitModifiers = MakeSplitModifiers(config)

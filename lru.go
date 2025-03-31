@@ -4,8 +4,8 @@ import (
 	"sync"
 )
 
-// Make creates a new LRU cache
-func Make(maxCapacity int) ICache {
+// newCache creates a new LRU cache
+func newCache(maxCapacity int) icache {
 	head := &node{}
 	tail := &node{}
 	tail.next = head
@@ -19,8 +19,8 @@ func Make(maxCapacity int) ICache {
 	}
 }
 
-// ICache is the interface for a LRU cache
-type ICache interface {
+// icache is the interface for a LRU cache
+type icache interface {
 	Get(string) string
 	Set(string, string)
 }

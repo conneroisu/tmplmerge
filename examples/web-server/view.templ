@@ -6,17 +6,23 @@ templ MainView(title string, content string) {
 	<html>
 		<head>
 			<title>{ title }</title>
+			<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 		</head>
 		<body>
 			<div
-				class={ twerge.Class("text-center", "bg-gray-900", "text-gray-100", "p-4") }
+				class={ twerge.Merge("text-center", "bg-gray-900", "text-gray-100", "p-4") }
 			>
 				hello darkness my old friend
 			</div>
 			<p
-				class="px-4 py-3 bg-gray-900 text-gray-100"
+				class={ twerge.Merge("text-center", "bg-blue-900", "text-blue-100", "p-4") }
 			>
 				I've come to talk with you again
+			</p>
+			<p
+				class={ twerge.Merge("text-center", "bg-green-900", "text-green-100", "p-4") }
+			>
+				And though you've been softly sleeping
 			</p>
 			<h1>{ title }</h1>
 			<p>{ content }</p>
