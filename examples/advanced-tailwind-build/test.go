@@ -1,3 +1,5 @@
+// Package main contains an example of the twerge CSS export utilities
+// usage in a pretend real-world project.
 package main
 
 import (

@@ -1,3 +1,6 @@
+// Package main contains the main function of the example web server.
+//
+// It is used to start the webserver and serve the example view.
 package main
 
 import (
