@@ -25,11 +25,13 @@
       https://cache.nixos.org
       https://nix-community.cachix.org
       https://devenv.cachix.org
+      https://twerge.cachix.org
     '';
     extra-trusted-public-keys = ''
       cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=
       nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=
       devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw=
+      twerge.cachix.org-1:rK2EdKDH7P2S4xNTXD58XiXDpXkNr3H0rpx8huCJ9+I=
     '';
     extra-experimental-features = "nix-command flakes";
   };
@@ -42,9 +44,9 @@
       "aarch64-linux"
       "aarch64-darwin"
     ] (system: let
-      overlays = [(final: prev: {final.go = prev.go_1_24;})];
-      pkgs = import inputs.nixpkgs {inherit system overlays;};
-      buildGoModule = pkgs.buildGoModule.override {go = pkgs.go_1_24;};
+      # overlays = [(final: prev: {final.go = prev.go_1_24;})];
+      pkgs = import inputs.nixpkgs {inherit system;};
+      buildGoModule = pkgs.buildGoModule.override {};
       buildWithSpecificGo = pkg: pkg.override {inherit buildGoModule;};
 
       scripts = {
@@ -96,20 +98,7 @@
         generate-all = {
           exec = ''
             export REPO_ROOT=$(git rev-parse --show-toplevel) # needed
-
-            ${pkgs.bun}/bin/bun build \
-                $REPO_ROOT/index.js \
-                --minify \
-                --minify-syntax \
-                --minify-whitespace  \
-                --minify-identifiers \
-                --outdir $REPO_ROOT/cmd/conneroh/_static/dist/ &
-
-            ${pkgs.tailwindcss}/bin/tailwindcss \
-                --minify \
-                -i $REPO_ROOT/input.css \
-                -o $REPO_ROOT/cmd/conneroh/_static/dist/style.css \
-                --cwd $REPO_ROOT &
+            ${buildWithSpecificGo pkgs.gomarkdoc}/bin/gomarkdoc -o README.md -e .
 
             wait
           '';
