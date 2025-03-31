@@ -58,8 +58,6 @@ jobs:
           extraPullNames: nix-community, devenv
       - name: Build shell
         run: nix develop --accept-flake-config --no-pure-eval -c true
-      # - name: Run tests
-      #   run: nix develop -c nix-unit --flake --no-pure-eval .#libTests
 
   checks:
     runs-on: ubuntu-latest
@@ -80,9 +78,9 @@ jobs:
       shell: bash
       run: |
         nix develop --no-pure-eval --accept-flake-config --command bash -c "tests"
-        nix develop --no-pure-eval --accept-flake-config --command bash -c  "unit-tests"
+        nix develop --no-pure-eval --accept-flake-config --command bash -c "unit-tests"
         nix develop --no-pure-eval --accept-flake-config --command bash -c "coverage-tests"
-        nix develop --no-pure-eval --accept-flake-config --command bash -c  "lint"
+        nix develop --no-pure-eval --accept-flake-config --command bash -c "lint"
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@13ce06bfc6bbe3ecf90edbbf1bc32fe5978ca1d3 # v5.3.1
       with:

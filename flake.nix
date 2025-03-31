@@ -82,6 +82,18 @@
           '';
           description = "Update the generated go files.";
         };
+        unit-tests = {
+          exec = ''
+            ${pkgs.go}/bin/go test -v ./...
+          '';
+          description = "Run unit tests.";
+        };
+        coverage-tests = {
+          exec = ''
+            ${pkgs.go}/bin/go test -v -coverprofile=coverage.out ./...
+          '';
+          description = "Run coverage tests.";
+        };
         generate-reload = {
           exec = ''
             ${pkgs.templ}/bin/templ generate &
