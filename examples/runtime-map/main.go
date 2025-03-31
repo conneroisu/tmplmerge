@@ -11,38 +11,38 @@ import (
 func main() {
 	// Initialize with common class combinations
 	twerge.InitWithCommonClasses()
-	
+
 	// Register some custom classes
 	twerge.RegisterClasses(map[string]string{
 		"bg-gradient-to-r from-purple-500 to-pink-500 text-white p-4": "tw-gradient",
-		"bg-black text-white p-6 rounded-lg shadow-xl": "tw-card-dark",
-		"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6": "tw-responsive-grid",
+		"bg-black text-white p-6 rounded-lg shadow-xl":                "tw-card-dark",
+		"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6":        "tw-responsive-grid",
 	})
-	
+
 	// Generate a new class name at runtime
 	customClass := twerge.RuntimeGenerate("text-sm font-medium text-gray-700")
-	
+
 	// Print all the registered class mappings
 	fmt.Println("Registered Class Mappings:")
 	fmt.Println("==========================")
-	
+
 	mapping := twerge.GetRuntimeMapping()
-	
+
 	// Print common classes
 	fmt.Println("\nCommon Classes:")
 	printSection(mapping, "tw-layout", "tw-text", "tw-btn", "tw-card", "tw-input")
-	
+
 	// Print custom classes
 	fmt.Println("\nCustom Classes:")
 	printSection(mapping, "tw-gradient", "tw-card-dark", "tw-responsive-grid")
-	
+
 	// Print dynamically generated classes
 	fmt.Println("\nDynamically Generated Classes:")
 	fmt.Printf("text-sm font-medium text-gray-700 -> %s\n", customClass)
-	
+
 	// Generate HTML for CSS styles
 	html := twerge.GetRuntimeClassHTML()
-	
+
 	// Save the HTML to a file
 	err := os.WriteFile("styles.css", []byte(html), 0644)
 	if err != nil {
@@ -50,7 +50,7 @@ func main() {
 	} else {
 		fmt.Println("\nGenerated CSS file: styles.css")
 	}
-	
+
 	// Show examples of how to use these classes in HTML
 	fmt.Println("\nHTML Usage Examples:")
 	fmt.Println("===================")

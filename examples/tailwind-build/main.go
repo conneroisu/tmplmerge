@@ -94,22 +94,22 @@ func registerClasses() {
 	// Register common utility classes
 	twerge.RegisterClasses(map[string]string{
 		// Layout
-		"flex items-center justify-between": "layout-between",
-		"flex items-center justify-center": "layout-center",
+		"flex items-center justify-between":                    "layout-between",
+		"flex items-center justify-center":                     "layout-center",
 		"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6": "grid-responsive",
 
 		// Components
-		"bg-white rounded-lg shadow-md p-6": "card",
+		"bg-white rounded-lg shadow-md p-6":                               "card",
 		"bg-white rounded-md shadow-sm hover:shadow-md transition-shadow": "card-hover",
 
 		// Buttons
-		"px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600": "btn-primary",
+		"px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600":    "btn-primary",
 		"px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300": "btn-secondary",
-		"px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600": "btn-danger",
+		"px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600":      "btn-danger",
 
 		// Typography
 		"text-xl font-bold text-gray-900": "text-title",
-		"text-sm text-gray-500": "text-muted",
+		"text-sm text-gray-500":           "text-muted",
 
 		// Forms
 		"block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500": "input",
@@ -142,7 +142,7 @@ func checkTailwindInstallation() {
 	err := cmd.Run()
 	if err != nil {
 		fmt.Println("Tailwind CLI is not installed. Installing...")
-		
+
 		// Install Tailwind CSS
 		installCmd := exec.Command("npm", "install", "-D", "tailwindcss")
 		output, err := installCmd.CombinedOutput()

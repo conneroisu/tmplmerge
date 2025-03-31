@@ -24,7 +24,7 @@ func main() {
 	fmt.Println("\nMerged classes:")
 	merged := twerge.Merge("text-red-500 text-blue-700")
 	fmt.Printf("text-red-500 text-blue-700 -> %s\n", merged)
-	
+
 	// Class conflict resolution
 	merged = twerge.Merge("p-4 p-8")
 	fmt.Printf("p-4 p-8 -> %s\n", merged)
@@ -39,14 +39,14 @@ func main() {
 	// Generate and save the class map code
 	outPath := filepath.Join(os.TempDir(), "class_map_generated.go")
 	fmt.Printf("\nGenerating class map code to %s\n", outPath)
-	
+
 	code := twerge.GenerateClassMapCode()
 	previewLen := len(code)
 	if previewLen > 200 {
 		previewLen = 200
 	}
 	fmt.Printf("\nGenerated code preview:\n%s...\n", code[:previewLen])
-	
+
 	err := os.WriteFile(outPath, []byte(code), 0644)
 	if err != nil {
 		fmt.Printf("Error writing file: %v\n", err)

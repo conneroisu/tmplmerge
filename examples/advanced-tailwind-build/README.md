@@ -5,18 +5,21 @@ This example demonstrates advanced integration between Twerge and Tailwind CSS, 
 ## Features Demonstrated
 
 1. **Multiple Export Formats**
+
    - Standard CSS with `@apply` directives
    - SCSS format for Sass workflows
    - LESS format for Less workflows
    - Minified CSS for production
 
 2. **Customization Options**
+
    - Class name prefixing
    - Custom markers for CSS injection
    - Comment toggling
    - Minification settings
 
 3. **Build System Integration**
+
    - PostCSS configuration generation
    - Tailwind CLI integration
    - Watch mode for development
@@ -31,11 +34,13 @@ This example demonstrates advanced integration between Twerge and Tailwind CSS, 
 ## Running the Example
 
 1. Install dependencies:
+
    ```
    npm install
    ```
 
 2. Run the example:
+
    ```
    go run main.go
    ```

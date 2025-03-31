@@ -17,9 +17,11 @@ The example application is an e-commerce store called "TechShop" with the follow
 The application includes:
 
 1. **Layouts**:
+
    - Base layout with header and footer
 
 2. **Pages**:
+
    - Home page with featured products and promotional sections
    - Products page with filtering capabilities
    - Shopping cart page with interactive elements
@@ -35,11 +37,13 @@ The application includes:
 This example demonstrates three different approaches to using Twerge:
 
 1. **Direct Class Names**: Using predefined class names like `tw-container`, `tw-card`, etc.
+
    ```html
    <div class="tw-container">...</div>
    ```
 
 2. **RuntimeGenerate**: Generating optimized class names at runtime
+
    ```html
    <div class={ twerge.RuntimeGenerate("flex items-center justify-between") }>...</div>
    ```
@@ -54,11 +58,13 @@ This example demonstrates three different approaches to using Twerge:
 To run this example:
 
 1. Navigate to the example directory:
+
    ```
    cd examples/complex-webapp
    ```
 
 2. Run the application:
+
    ```
    go run main.go tailwind_classes.go
    ```
@@ -73,6 +79,7 @@ To run this example:
 In a production environment, you would typically:
 
 1. Generate a static CSS file from the runtime class map:
+
    ```go
    css := twerge.GetRuntimeClassHTML()
    os.WriteFile("public/css/tailwind-classes.css", []byte(css), 0644)

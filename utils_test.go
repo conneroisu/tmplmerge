@@ -91,13 +91,13 @@ func TestGenerateInputCSSForTailwind(t *testing.T) {
 		t.Fatalf("Failed to create temp input file: %v", err)
 	}
 	defer func() { _ = os.Remove(inputFile.Name()) }()
-	
+
 	outputFile, err := os.CreateTemp("", "twerge-output-*.css")
 	if err != nil {
 		t.Fatalf("Failed to create temp output file: %v", err)
 	}
 	defer func() { _ = os.Remove(outputFile.Name()) }()
-	
+
 	// Write some content to the input file
 	inputContent := `@tailwind base;
 @tailwind components;
@@ -116,22 +116,22 @@ func TestGenerateInputCSSForTailwind(t *testing.T) {
 `
 	err = os.WriteFile(inputFile.Name(), []byte(inputContent), 0644)
 	assert.NoError(t, err)
-	
+
 	// Register some test classes
 	ClearRuntimeMap()
 	RegisterClasses(map[string]string{
 		"text-red-500 font-bold": "tw-test1",
 		"bg-blue-500 p-4":        "tw-test2",
 	})
-	
+
 	// Generate input CSS
 	err = GenerateInputCSSForTailwind(inputFile.Name(), outputFile.Name())
 	assert.NoError(t, err)
-	
+
 	// Read the output file
 	outputContent, err := os.ReadFile(outputFile.Name())
 	assert.NoError(t, err)
-	
+
 	// Check content
 	outputStr := string(outputContent)
 	assert.Contains(t, outputStr, "@tailwind base")
@@ -147,14 +147,14 @@ func TestMergeCSSMaps(t *testing.T) {
 		"class1": "tw-1",
 		"class2": "tw-2",
 	}
-	
+
 	map2 := map[string]string{
 		"class2": "tw-2-new", // This should override the previous value
 		"class3": "tw-3",
 	}
-	
+
 	merged := MergeCSSMaps(map1, map2)
-	
+
 	assert.Equal(t, 3, len(merged))
 	assert.Equal(t, "tw-1", merged["class1"])
 	assert.Equal(t, "tw-2-new", merged["class2"]) // Should have the updated value
@@ -169,30 +169,30 @@ func TestAppendClassesToFile(t *testing.T) {
 	}
 	defer func() { _ = os.Remove(tempFile.Name()) }()
 	_ = tempFile.Close()
-	
+
 	// Test classes
 	classes := map[string]string{
 		"text-red-500 font-bold": "test1",
 		"bg-blue-500 p-4":        "test2",
 	}
-	
+
 	// Custom prefix
 	prefix := "custom-"
-	
+
 	// Append to file
 	err = AppendClassesToFile(tempFile.Name(), classes, prefix)
 	assert.NoError(t, err)
-	
+
 	// Read back the file
 	content, err := os.ReadFile(tempFile.Name())
 	assert.NoError(t, err)
-	
+
 	// Check content
 	contentStr := string(content)
 	assert.Contains(t, contentStr, ".custom-test1")
 	assert.Contains(t, contentStr, ".custom-test2")
 	assert.Contains(t, contentStr, "@apply")
-	
+
 	// Count occurrences of class definitions
 	classDefCount := strings.Count(contentStr, "@apply")
 	assert.Equal(t, 2, classDefCount)

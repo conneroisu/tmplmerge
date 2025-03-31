@@ -108,4 +108,3 @@ func WriteClassMapFile(filepath string) error {
 	// Just write the code directly to file
 	return os.WriteFile(filepath, []byte(code), 0644)
 }
-

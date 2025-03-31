@@ -1,18 +1,54 @@
-.tw-card-dark { @apply p-6 text-white bg-black rounded-lg shadow-xl; }
-.tw-gradient { @apply to-pink-500 text-white bg-gradient-to-r from-purple-500 p-4; }
-.tw-card2 { @apply rounded-lg bg-gray-100 p-4; }
-.tw-card1 { @apply shadow-md bg-white p-6 rounded-lg; }
-.tw-input1 { @apply block shadow-sm border-gray-300 w-full rounded-md; }
-.tw-layout4 { @apply container mx-auto px-4; }
-.tw-layout2 { @apply flex-col space-y-4 flex; }
-.tw-layout1 { @apply flex items-center justify-center; }
-.tw-text3 { @apply font-medium text-indigo-600 hover:text-indigo-500; }
-.tw-responsive-grid { @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6; }
-.tw-layout3 { @apply grid grid-cols-3 gap-4; }
-.tw-input2 { @apply shadow-sm rounded-md border-gray-300 mt-1 block w-full; }
-.tw-btn1 { @apply py-2 bg-blue-500 text-white px-4 rounded hover:bg-blue-600; }
-.tw-btn2 { @apply py-2 bg-gray-200 text-gray-800 rounded px-4 hover:bg-gray-300; }
-.tw-btn3 { @apply rounded shadow-sm border-gray-300 py-2 px-4 border; }
-.tw-35UMOtT { @apply text-sm font-medium text-gray-700; }
-.tw-text2 { @apply text-sm text-gray-500; }
-.tw-text1 { @apply text-xl font-bold text-gray-900; }
+.tw-card-dark {
+  @apply p-6 text-white bg-black rounded-lg shadow-xl;
+}
+.tw-gradient {
+  @apply to-pink-500 text-white bg-gradient-to-r from-purple-500 p-4;
+}
+.tw-card2 {
+  @apply rounded-lg bg-gray-100 p-4;
+}
+.tw-card1 {
+  @apply shadow-md bg-white p-6 rounded-lg;
+}
+.tw-input1 {
+  @apply block shadow-sm border-gray-300 w-full rounded-md;
+}
+.tw-layout4 {
+  @apply container mx-auto px-4;
+}
+.tw-layout2 {
+  @apply flex-col space-y-4 flex;
+}
+.tw-layout1 {
+  @apply flex items-center justify-center;
+}
+.tw-text3 {
+  @apply font-medium text-indigo-600 hover:text-indigo-500;
+}
+.tw-responsive-grid {
+  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6;
+}
+.tw-layout3 {
+  @apply grid grid-cols-3 gap-4;
+}
+.tw-input2 {
+  @apply shadow-sm rounded-md border-gray-300 mt-1 block w-full;
+}
+.tw-btn1 {
+  @apply py-2 bg-blue-500 text-white px-4 rounded hover:bg-blue-600;
+}
+.tw-btn2 {
+  @apply py-2 bg-gray-200 text-gray-800 rounded px-4 hover:bg-gray-300;
+}
+.tw-btn3 {
+  @apply rounded shadow-sm border-gray-300 py-2 px-4 border;
+}
+.tw-35UMOtT {
+  @apply text-sm font-medium text-gray-700;
+}
+.tw-text2 {
+  @apply text-sm text-gray-500;
+}
+.tw-text1 {
+  @apply text-xl font-bold text-gray-900;
+}

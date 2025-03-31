@@ -21,7 +21,7 @@ func TestGenerate(t *testing.T) {
 	// Test that Generate handles class merging correctly
 	class3 := Generate("text-red-500 text-blue-700")
 	assert.NotEqual(t, class1, class3, "Generate should return different class names for different inputs")
-	
+
 	// Test that the generated class name format is correct
 	assert.True(t, strings.HasPrefix(class1, "tw-"), "Generated class should start with 'tw-'")
 	assert.Equal(t, 10, len(class1), "Generated class should be 10 characters long (tw- + 7 chars)")
@@ -36,7 +36,7 @@ func TestGetMapping(t *testing.T) {
 	// Generate some class names and store them directly in the global map for testing
 	class1 := "tw-abcdefg"
 	class2 := "tw-hijklmn"
-	
+
 	mapMutex.Lock()
 	globalClassMap["text-red-500 bg-blue-500"] = class1
 	globalClassMap["text-green-300 p-4"] = class2
@@ -55,7 +55,7 @@ func TestGenerateClassMapCode(t *testing.T) {
 	// Reset the global class map for testing
 	mapMutex.Lock()
 	globalClassMap = make(ClassMap)
-	
+
 	// Store directly in the global map for testing
 	globalClassMap["text-red-500 bg-blue-500"] = "tw-abcdefg"
 	globalClassMap["text-green-300 p-4"] = "tw-hijklmn"

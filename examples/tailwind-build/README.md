@@ -9,7 +9,7 @@ This example shows how to:
 1. Register Tailwind utility classes with Twerge
 2. Generate CSS content with `@apply` directives
 3. Insert the CSS into an input file between specific markers
-4. Run the Tailwind CLI to process the input file 
+4. Run the Tailwind CLI to process the input file
 5. Generate optimized CSS output for production
 
 ## How It Works
