@@ -2,7 +2,10 @@ module github.com/conneroisu/tmplmerge
 
 go 1.24.1
 
-require github.com/stretchr/testify v1.10.0
+require (
+	github.com/a-h/templ v0.3.857
+	github.com/stretchr/testify v1.10.0
+)
 
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect

@@ -6,30 +6,37 @@ import (
 	"strings"
 )
 
-// Merge is the default template merger
-var Merge = CreateTwMerge(nil, nil)
+var (
+	// Merge is the default template merger
+	Merge        = CreateTwMerge(nil, nil)
+	splitPattern = regexp.MustCompile(SplitClassesRegex)
+)
 
 // SplitClassesRegex is the regex used to split classes
 const SplitClassesRegex = `\s+`
-
-var splitPattern = regexp.MustCompile(SplitClassesRegex)
 
 // TwMergeFn is the type of the template merger.
 type TwMergeFn func(args ...string) string
 
 // SplitModifiersFn is the type of the function used to split modifiers
-type SplitModifiersFn = func(string) (baseClass string, modifiers []string, hasImportant bool, maybePostfixModPosition int)
+type SplitModifiersFn = func(string) (
+	baseClass string,
+	modifiers []string,
+	hasImportant bool,
+	maybePostfixModPosition int,
+)
 
 // CreateTwMerge creates a new template merger
 func CreateTwMerge(
 	config *Config,
 	cache ICache,
 ) TwMergeFn {
-
-	var fnToCall TwMergeFn
-	var splitModifiers SplitModifiersFn
-	var getClassGroupID GetClassGroupIdfn
-	var mergeClassList func(classList string) string
+	var (
+		fnToCall        TwMergeFn
+		splitModifiers  SplitModifiersFn
+		getClassGroupID GetClassGroupIdfn
+		mergeClassList  func(classList string) string
+	)
 
 	merger := func(args ...string) string {
 		classList := strings.TrimSpace(strings.Join(args, " "))
@@ -48,7 +55,7 @@ func CreateTwMerge(
 
 	init := func(args ...string) string {
 		if config == nil {
-			config = MakeDefaultConfig()
+			config = DefaultConfig
 		}
 		if cache == nil {
 			cache = Make(config.MaxCacheSize)
@@ -82,11 +89,11 @@ func MakeMergeClassList(
 		resultClassList := ""
 
 		for _, class := range classes {
-			baseClass, modifiers, hasImportant, maybePostfixModPosition := splitModifiers(class)
+			baseClass, modifiers, hasImportant, postFixMod := splitModifiers(class)
 
 			// there is a postfix modifier -> text-lg/8
-			if maybePostfixModPosition != -1 {
-				baseClass = baseClass[:maybePostfixModPosition]
+			if postFixMod != -1 {
+				baseClass = baseClass[:postFixMod]
 			}
 			isTwClass, groupID := getClassGroupID(baseClass)
 			if !isTwClass {
@@ -188,6 +195,7 @@ func MakeSplitModifiers(conf *Config) SplitModifiersFn {
 
 		baseClassWithImportant := className[modifierStart:]
 		hasImportant := baseClassWithImportant[0] == byte(conf.ImportantModifier)
+
 		var baseClass string
 		if hasImportant {
 			baseClass = baseClassWithImportant[1:]

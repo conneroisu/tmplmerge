@@ -47,7 +47,7 @@
       # overlays = [(final: prev: {final.go = prev.go_1_24;})];
       pkgs = import inputs.nixpkgs {inherit system;};
       buildGoModule = pkgs.buildGoModule.override {};
-      buildWithSpecificGo = pkg: pkg.override {inherit buildGoModule;};
+      specificGo = pkg: pkg.override {inherit buildGoModule;};
 
       scripts = {
         dx = {
@@ -110,8 +110,7 @@
         generate-all = {
           exec = ''
             export REPO_ROOT=$(git rev-parse --show-toplevel) # needed
-            ${buildWithSpecificGo pkgs.gomarkdoc}/bin/gomarkdoc -o README.md -e .
-
+            ${specificGo pkgs.gomarkdoc}/bin/gomarkdoc -o README.md -e .
             wait
           '';
           description = "Generate js files";
@@ -204,14 +203,14 @@
             pprof
             revive
             golangci-lint
-            (buildWithSpecificGo gopls)
-            (buildWithSpecificGo templ)
-            (buildWithSpecificGo golines)
-            (buildWithSpecificGo golangci-lint-langserver)
-            (buildWithSpecificGo gomarkdoc)
-            (buildWithSpecificGo gotests)
-            (buildWithSpecificGo gotools)
-            (buildWithSpecificGo reftools)
+            (specificGo gopls)
+            (specificGo templ)
+            (specificGo golines)
+            (specificGo golangci-lint-langserver)
+            (specificGo gomarkdoc)
+            (specificGo gotests)
+            (specificGo gotools)
+            (specificGo reftools)
             graphviz
 
             # Web
