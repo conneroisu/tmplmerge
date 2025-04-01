@@ -12,12 +12,12 @@ import (
 	"github.com/dave/jennifer/jen"
 )
 
-// ClassMap is a mapping of original class strings to generated class names
-type ClassMap map[string]string
+// classMap is a mapping of original class strings to generated class names
+type classMap map[string]string
 
 var (
 	// Global mapping of original class strings to generated class names
-	globalClassMap = make(ClassMap)
+	globalClassMap = make(classMap)
 
 	// Mutex to protect globalClassMap
 	mapMutex sync.RWMutex
@@ -60,13 +60,12 @@ func Generate(classes string) string {
 	return classname
 }
 
-// GetMapping returns the current mapping from original class strings to generated class names
-func GetMapping() ClassMap {
+func getMapping() classMap {
 	mapMutex.RLock()
 	defer mapMutex.RUnlock()
 
 	// Create a copy to avoid concurrent map access issues
-	mapping := make(ClassMap, len(globalClassMap))
+	mapping := make(classMap, len(globalClassMap))
 	maps.Copy(mapping, globalClassMap)
 
 	return mapping
@@ -74,7 +73,7 @@ func GetMapping() ClassMap {
 
 // GenerateClassMapCode generates Go code for a variable containing the class mapping
 func GenerateClassMapCode() string {
-	mapping := GetMapping()
+	mapping := getMapping()
 
 	// Create a new file
 	f := jen.NewFile("twerge")

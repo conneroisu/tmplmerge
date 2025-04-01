@@ -8,9 +8,18 @@ templ MainView(title string, content string) {
 			<title>{ title }</title>
 			<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 			<style>
-				/* Generated class names from runtime map */
-				@unsafe {
-					twerge.GetRuntimeClassHTML()
+				/* Tailwind class styles would be included in your CSS build */
+				.tw-header {
+					@apply text-center bg-gray-900 text-gray-100 p-4;
+				}
+				.tw-paragraph {
+					@apply text-center bg-blue-900 text-blue-100 p-4;
+				}
+				.tw-green-text {
+					@apply text-center bg-green-900 text-green-100 p-4;
+				}
+				.tw-outro {
+					@apply italic text-lg text-gray-600;
 				}
 			</style>
 		</head>
@@ -21,19 +30,19 @@ templ MainView(title string, content string) {
 			>
 				hello darkness my old friend
 			</div>
-			<!-- Using Generate: Generates unique class name from generation step -->
+			<!-- Using Generate: Generates unique class name -->
 			<p
-				class={ twerge.Merge("text-center bg-blue-900 text-blue-100 p-4") }
+				class={ twerge.Generate("text-center bg-blue-900 text-blue-100 p-4") }
 			>
 				I've come to talk with you again
 			</p>
-			<!-- Using RuntimeGenerate: Uses the static hashmap at runtime -->
+			<!-- Using Generate with known class name -->
 			<p
-				class={ twerge.Merge("text-center bg-green-900 text-green-100 p-4") }
+				class={ twerge.Generate("text-center bg-green-900 text-green-100 p-4") }
 			>
 				Because a vision softly creeping
 			</p>
-			<!-- Direct usage of predefined class from runtime map -->
+			<!-- Direct usage of predefined class from static map -->
 			<p class="tw-outro">
 				And though you've been softly sleeping
 			</p>

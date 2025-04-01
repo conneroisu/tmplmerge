@@ -15,7 +15,7 @@ var ClassMapStr = make(map[string]string)
 var (
 	// Merge is the default template merger
 	// It takes a space-delimited string of TailwindCSS classes and returns a merged string
-	// It also adds the merged class to the RuntimeClassMap when used
+	// It also adds the merged class to the ClassMapStr when used
 	// It will quickly return the generated class name from ClassMapStr if available
 	Merge        = createTwMerge(nil, nil)
 	splitPattern = regexp.MustCompile(splitClassesRegex)
@@ -53,28 +53,23 @@ func createTwMerge(
 			return ""
 		}
 		
-		// First check if the class string is in ClassMapStr for quick lookup
-		if className, exists := ClassMapStr[classList]; exists {
-			return className
-		}
-		
+		// Check if we've seen this class list before in the cache
 		cached := cache.Get(classList)
 		if cached != "" {
 			return cached
 		}
-		// check if in cache
+		
+		// Merge the classes
 		merged := mergeClassList(classList)
 		cache.Set(classList, merged)
 		
-		// Add to RuntimeClassMap for runtime access
-		// Generate a unique class name from the merged string
-		hash := sha1.Sum([]byte(merged))
-		className := "tw-" + base64.URLEncoding.EncodeToString(hash[:])[:7]
-		
-		// Add to global RuntimeClassMap - no mutex needed as we're in the same package
-		// and only accessing directly during initialization
-		if RuntimeClassMap != nil {
-			RuntimeClassMap[classList] = className
+		// Add to ClassMapStr for lookup by other functions
+		if classList != merged {
+			// Add both the original and merged versions to ClassMapStr
+			hash := sha1.Sum([]byte(merged))
+			className := "tw-" + base64.URLEncoding.EncodeToString(hash[:])[:7]
+			ClassMapStr[classList] = className
+			ClassMapStr[merged] = className
 		}
 		
 		return merged

@@ -2,41 +2,14 @@ package twerge
 
 import (
 	"os"
-	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
-func TestWriteCSSToFile(t *testing.T) {
-	// Create a temporary file
-	tempFile, err := os.CreateTemp("", "twerge-css-test-*.css")
-	if err != nil {
-		t.Fatalf("Failed to create temp file: %v", err)
-	}
-	defer func() { _ = os.Remove(tempFile.Name()) }()
-	_ = tempFile.Close()
-
-	// Test content
-	cssContent := ".test-class { @apply text-red-500; }"
-
-	// Write to the file
-	err = WriteCSSToFile(tempFile.Name(), cssContent)
-	assert.NoError(t, err)
-
-	// Read back the file
-	content, err := os.ReadFile(tempFile.Name())
-	assert.NoError(t, err)
-
-	// Check that the markers and content are there
-	assert.Contains(t, string(content), TwergeBeginMarker)
-	assert.Contains(t, string(content), TwergeEndMarker)
-	assert.Contains(t, string(content), cssContent)
-}
-
 func TestReplaceBetweenMarkers(t *testing.T) {
 	// Test with existing markers
-	original := []byte("Some content\n" + TwergeBeginMarker + "\nold content\n" + TwergeEndMarker + "\nMore content")
+	original := []byte("Some content\n" + twergeBeginMarker + "\nold content\n" + twergeEndMarker + "\nMore content")
 	replacement := []byte("new content")
 
 	result, err := replaceBetweenMarkers(original, replacement)
@@ -48,40 +21,9 @@ func TestReplaceBetweenMarkers(t *testing.T) {
 	original = []byte("Some content without markers")
 	result, err = replaceBetweenMarkers(original, replacement)
 	assert.NoError(t, err)
-	assert.Contains(t, string(result), TwergeBeginMarker)
-	assert.Contains(t, string(result), TwergeEndMarker)
+	assert.Contains(t, string(result), twergeBeginMarker)
+	assert.Contains(t, string(result), twergeEndMarker)
 	assert.Contains(t, string(result), "new content")
-}
-
-func TestExportCSS(t *testing.T) {
-	// Create a temporary file
-	tempFile, err := os.CreateTemp("", "twerge-export-test-*.css")
-	if err != nil {
-		t.Fatalf("Failed to create temp file: %v", err)
-	}
-	defer func() { _ = os.Remove(tempFile.Name()) }()
-	_ = tempFile.Close()
-
-	// Register some test classes
-	ClearRuntimeMap()
-	RegisterClasses(map[string]string{
-		"text-red-500 font-bold": "tw-test1",
-		"bg-blue-500 p-4":        "tw-test2",
-	})
-
-	// Export to file
-	err = ExportCSS(tempFile.Name())
-	assert.NoError(t, err)
-
-	// Read back the file
-	content, err := os.ReadFile(tempFile.Name())
-	assert.NoError(t, err)
-
-	// Check content
-	contentStr := string(content)
-	assert.Contains(t, contentStr, ".tw-test1")
-	assert.Contains(t, contentStr, ".tw-test2")
-	assert.Contains(t, contentStr, "@apply")
 }
 
 func TestGenerateInputCSSForTailwind(t *testing.T) {
@@ -108,24 +50,23 @@ func TestGenerateInputCSSForTailwind(t *testing.T) {
   color: blue;
 }
 
-` + TwergeBeginMarker + `
+` + twergeBeginMarker + `
 /* Old generated content */
-` + TwergeEndMarker + `
+` + twergeEndMarker + `
 
 /* More styles */
 `
 	err = os.WriteFile(inputFile.Name(), []byte(inputContent), 0644)
 	assert.NoError(t, err)
 
-	// Register some test classes
-	ClearRuntimeMap()
-	RegisterClasses(map[string]string{
+	// Create a test class map
+	classMap := map[string]string{
 		"text-red-500 font-bold": "tw-test1",
 		"bg-blue-500 p-4":        "tw-test2",
-	})
+	}
 
 	// Generate input CSS
-	err = GenerateInputCSSForTailwind(inputFile.Name(), outputFile.Name())
+	err = GenerateTailwind(inputFile.Name(), outputFile.Name(), classMap)
 	assert.NoError(t, err)
 
 	// Read the output file
@@ -140,60 +81,4 @@ func TestGenerateInputCSSForTailwind(t *testing.T) {
 	assert.Contains(t, outputStr, ".tw-test2")
 	assert.NotContains(t, outputStr, "Old generated content")
 	assert.Contains(t, outputStr, "/* More styles */")
-}
-
-func TestMergeCSSMaps(t *testing.T) {
-	map1 := map[string]string{
-		"class1": "tw-1",
-		"class2": "tw-2",
-	}
-
-	map2 := map[string]string{
-		"class2": "tw-2-new", // This should override the previous value
-		"class3": "tw-3",
-	}
-
-	merged := MergeCSSMaps(map1, map2)
-
-	assert.Equal(t, 3, len(merged))
-	assert.Equal(t, "tw-1", merged["class1"])
-	assert.Equal(t, "tw-2-new", merged["class2"]) // Should have the updated value
-	assert.Equal(t, "tw-3", merged["class3"])
-}
-
-func TestAppendClassesToFile(t *testing.T) {
-	// Create a temporary file
-	tempFile, err := os.CreateTemp("", "twerge-append-test-*.css")
-	if err != nil {
-		t.Fatalf("Failed to create temp file: %v", err)
-	}
-	defer func() { _ = os.Remove(tempFile.Name()) }()
-	_ = tempFile.Close()
-
-	// Test classes
-	classes := map[string]string{
-		"text-red-500 font-bold": "test1",
-		"bg-blue-500 p-4":        "test2",
-	}
-
-	// Custom prefix
-	prefix := "custom-"
-
-	// Append to file
-	err = AppendClassesToFile(tempFile.Name(), classes, prefix)
-	assert.NoError(t, err)
-
-	// Read back the file
-	content, err := os.ReadFile(tempFile.Name())
-	assert.NoError(t, err)
-
-	// Check content
-	contentStr := string(content)
-	assert.Contains(t, contentStr, ".custom-test1")
-	assert.Contains(t, contentStr, ".custom-test2")
-	assert.Contains(t, contentStr, "@apply")
-
-	// Count occurrences of class definitions
-	classDefCount := strings.Count(contentStr, "@apply")
-	assert.Equal(t, 2, classDefCount)
 }

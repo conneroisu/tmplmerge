@@ -4,16 +4,18 @@ import (
 	"fmt"
 	"time"
 
+	"maps"
+
 	"github.com/conneroisu/twerge"
 )
 
 func main() {
 	// Populate the ClassMapStr with some frequently used class combinations
 	twerge.ClassMapStr = map[string]string{
-		"flex items-center justify-center": "tw-header",
+		"flex items-center justify-center":   "tw-header",
 		"p-4 bg-blue-500 text-white rounded": "tw-button",
-		"grid grid-cols-3 gap-4": "tw-grid3",
-		"text-xl font-bold text-gray-900": "tw-title",
+		"grid grid-cols-3 gap-4":             "tw-grid3",
+		"text-xl font-bold text-gray-900":    "tw-title",
 	}
 
 	// Example 1: Direct lookup from ClassMapStr
@@ -34,19 +36,22 @@ func main() {
 	fmt.Printf("Output: \"%s\"\n", result2)
 	fmt.Printf("Time: %s (slower, required merging)\n\n", elapsed2)
 
-	// Example 3: Using RegisterClasses to populate RuntimeClassMap
-	twerge.RegisterClasses(map[string]string{
-		"text-sm text-gray-500": "tw-subtitle",
+	// Example 3: Adding more entries to ClassMapStr
+	additionalClasses := map[string]string{
+		"text-sm text-gray-500":   "tw-subtitle",
 		"flex flex-col space-y-4": "tw-colstack",
-	})
+	}
 
-	// This still uses ClassMapStr for quick lookup
-	fmt.Println("Example 3: Using both ClassMapStr and RuntimeClassMap")
+	// Update the ClassMapStr map directly
+	maps.Copy(twerge.ClassMapStr, additionalClasses)
+
+	// This uses ClassMapStr for quick lookup
+	fmt.Println("Example 3: Using ClassMapStr for lookups")
 	result3 := twerge.Merge("text-xl font-bold text-gray-900") // From ClassMapStr
-	result4 := twerge.RuntimeGenerate("text-sm text-gray-500") // From RuntimeClassMap
-	
-	fmt.Printf("From ClassMapStr: \"%s\"\n", result3)
-	fmt.Printf("From RuntimeGenerate: \"%s\"\n", result4)
+	result4 := twerge.Generate("text-sm text-gray-500")        // From ClassMapStr
+
+	fmt.Printf("From ClassMapStr lookup: \"%s\"\n", result3)
+	fmt.Printf("From Generate: \"%s\"\n", result4)
 
 	// Example 4: Auto-generate code for ClassMapStr
 	fmt.Println("\nExample 4: Auto-generate code for ClassMapStr")

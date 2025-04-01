@@ -13,8 +13,6 @@ func main() {
 	class1 := twerge.Merge("text-red-500 bg-blue-500")
 	class2 := twerge.Merge("text-green-300 p-4")
 	class3 := twerge.Merge("flex items-center justify-between")
-
-	// Print the generated class names
 	fmt.Println("Generated class names:")
 	fmt.Printf("text-red-500 bg-blue-500 -> %s\n", class1)
 	fmt.Printf("text-green-300 p-4 -> %s\n", class2)
@@ -29,18 +27,12 @@ func main() {
 	merged = twerge.Merge("p-4 p-8")
 	fmt.Printf("p-4 p-8 -> %s\n", merged)
 
-	// Get the mapping
-	mapping := twerge.GetMapping()
-	fmt.Println("\nClass mapping:")
-	for orig, gen := range mapping {
-		fmt.Printf("%s -> %s\n", orig, gen)
-	}
-
 	// Generate and save the class map code
 	outPath := filepath.Join(os.TempDir(), "class_map_generated.go")
 	fmt.Printf("\nGenerating class map code to %s\n", outPath)
 
-	twerge.ClearRuntimeMap()
+	// Reset ClassMapStr for a clean start
+	twerge.ClassMapStr = make(map[string]string)
 	code := twerge.GenerateClassMapCode()
 	previewLen := min(len(code), 200)
 	fmt.Printf("\nGenerated code preview:\n%s...\n", code[:previewLen])

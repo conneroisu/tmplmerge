@@ -23,17 +23,21 @@ templ Base(title string, user models.User, cartItemCount int) {
 			<!-- Base styles -->
 			<link rel="stylesheet" href="/static/style.css"/>
 			
-			<!-- Generated styles from twerge -->
+			<!-- Generated styles would normally be in an external CSS file -->
 			<style>
-				@unsafe {
-					twerge.GetRuntimeClassHTML()
+				/* These styles would typically be generated at build time */
+				.tw-flex-col {
+					@apply flex flex-col min-h-screen bg-gray-50;
+				}
+				.tw-main {
+					@apply flex-grow;
 				}
 			</style>
 		</head>
-		<body class={ twerge.RuntimeGenerate("flex flex-col min-h-screen bg-gray-50") }>
+		<body class={ twerge.Generate("flex flex-col min-h-screen bg-gray-50") }>
 			@components.Header(user, cartItemCount)
 			
-			<main class={ twerge.RuntimeGenerate("flex-grow") }>
+			<main class={ twerge.Generate("flex-grow") }>
 				{ children... }
 			</main>
 			

@@ -115,29 +115,29 @@ func isLength(val string) bool {
 }
 
 func isArbitraryLength(val string) bool {
-	return GetIsArbitraryValue(val, "length", isLengthOnly)
+	return labelIsArbitraryValue(val, "length", isLengthOnly)
 }
 
 // isArbitraryNumber returns true if the given value is an arbitrary number
 func isArbitraryNumber(val string) bool {
-	return GetIsArbitraryValue(val, "number", isNumber)
+	return labelIsArbitraryValue(val, "number", isNumber)
 }
 
 // isArbitraryPosition returns true if the given value is an arbitrary position
 func isArbitraryPosition(val string) bool {
-	return GetIsArbitraryValue(val, "position", isNever)
+	return labelIsArbitraryValue(val, "position", isNever)
 }
 
 // isArbitrarySize returns true if the given value is an arbitrary size
 func isArbitrarySize(val string) bool {
-	return GetIsArbitraryValue(val, sizeLabels, isNever)
+	return labelIsArbitraryValue(val, sizeLabels, isNever)
 }
 
 func isArbitraryImage(val string) bool {
-	return GetIsArbitraryValue(val, imageLabels, isImage)
+	return labelIsArbitraryValue(val, imageLabels, isImage)
 }
 func isArbitraryShadow(val string) bool {
-	return GetIsArbitraryValue(val, "", isShadow)
+	return labelIsArbitraryValue(val, "", isShadow)
 }
 
 func isArbitraryValue(val string) bool {
@@ -184,10 +184,10 @@ func isLengthOnly(val string) bool {
 	return lengthUnitRegex.MatchString(val) && !colorFnRegex.MatchString(val)
 }
 
-// GetIsArbitraryValue returns true if the given value is an arbitrary value
+// labelIsArbitraryValue returns true if the given value is an arbitrary value
 // with the given label. The label can be a string, a map[string]bool or a
 // function that takes a string and returns a bool.
-func GetIsArbitraryValue(
+func labelIsArbitraryValue(
 	val string,
 	label any,
 	testValue func(string) bool,

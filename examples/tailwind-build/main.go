@@ -7,6 +7,8 @@ import (
 	"os/exec"
 	"path/filepath"
 
+	"maps"
+
 	"github.com/conneroisu/twerge"
 )
 
@@ -14,14 +16,17 @@ func main() {
 	// Create the directory structure
 	createDirectories()
 
-	// Step 1: Register Tailwind classes
-	fmt.Println("Registering Tailwind classes...")
-	registerClasses()
+	// Step 1: Create class map
+	fmt.Println("Creating class map...")
+	classMap := createClassMap()
+
+	// Add to ClassMapStr for other operations
+	maps.Copy(twerge.ClassMapStr, classMap)
 
 	// Step 2: Generate the input CSS file for Tailwind CLI
 	fmt.Println("Generating input CSS file...")
 	inputCSSPath := filepath.Join("src", "input.css")
-	err := twerge.GenerateInputCSSForTailwind(inputCSSPath, inputCSSPath)
+	err := twerge.GenerateTailwind(inputCSSPath, inputCSSPath, classMap)
 	if err != nil {
 		log.Fatalf("Error generating input CSS: %v", err)
 	}
@@ -90,9 +95,9 @@ module.exports = {
 	}
 }
 
-func registerClasses() {
-	// Register common utility classes
-	twerge.RegisterClasses(map[string]string{
+func createClassMap() map[string]string {
+	// Create a map of common utility classes
+	return map[string]string{
 		// Layout
 		"flex items-center justify-between":                    "layout-between",
 		"flex items-center justify-center":                     "layout-center",
@@ -117,7 +122,7 @@ func registerClasses() {
 		// Navigation
 		"bg-white shadow": "navbar",
 		"px-6 py-3 flex items-center justify-between": "navbar-inner",
-	})
+	}
 }
 
 func runTailwindCLI() {
@@ -251,3 +256,4 @@ func generateSampleHTML() {
 		log.Fatalf("Error generating sample HTML: %v", err)
 	}
 }
+

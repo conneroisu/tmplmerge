@@ -4,8 +4,8 @@ import "github.com/conneroisu/twerge"
 
 // InitTailwindClasses sets up the tailwind class mapping
 func InitTailwindClasses() {
-	// Register common layout classes
-	twerge.RegisterClasses(map[string]string{
+	// Initialize the tailwind class map
+	classes := map[string]string{
 		// Layout & Container
 		"container mx-auto px-4 sm:px-6 lg:px-8": "tw-container",
 		"max-w-7xl mx-auto":                      "tw-container-lg",
@@ -67,5 +67,10 @@ func InitTailwindClasses() {
 		"sr-only":         "tw-sr-only",
 		"hidden sm:block": "tw-hide-mobile",
 		"block sm:hidden": "tw-hide-desktop",
-	})
+	}
+	
+	// Add all classes to the ClassMapStr
+	for k, v := range classes {
+		twerge.ClassMapStr[k] = v
+	}
 }
