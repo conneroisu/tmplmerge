@@ -79,9 +79,9 @@ module.exports = {
 
 /* Custom CSS goes here */
 
-<!-- twerge:begin -->
+/* twerge:begin */
 /* Twerge generated classes will be inserted here */
-<!-- twerge:end -->
+/* twerge:end */
 `
 		err = os.WriteFile(inputCSSPath, []byte(inputCSS), 0644)
 		if err != nil {

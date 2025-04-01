@@ -41,10 +41,7 @@ func main() {
 	fmt.Printf("\nGenerating class map code to %s\n", outPath)
 
 	code := twerge.GenerateClassMapCode()
-	previewLen := len(code)
-	if previewLen > 200 {
-		previewLen = 200
-	}
+	previewLen := min(len(code), 200)
 	fmt.Printf("\nGenerated code preview:\n%s...\n", code[:previewLen])
 
 	err := os.WriteFile(outPath, []byte(code), 0644)

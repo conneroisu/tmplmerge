@@ -16,9 +16,9 @@ const (
 	// Section markers used to identify where generated CSS should be placed
 
 	// TwergeBeginMarker is the beginning of the section where the generated CSS will be placed
-	TwergeBeginMarker = "<!-- twerge:begin -->"
+	TwergeBeginMarker = "/* twerge:begin */"
 	// TwergeEndMarker is the end of the section where the generated CSS will be placed
-	TwergeEndMarker = "<!-- twerge:end -->"
+	TwergeEndMarker = "/* twerge:end */"
 )
 
 // ExportCSS exports the CSS generated from the RuntimeClassMap to a file,

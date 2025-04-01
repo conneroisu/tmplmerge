@@ -25,7 +25,7 @@ This will write the CSS for all registered classes between markers:
 
 /* Content before the markers is preserved */
 
-<!-- twerge:begin -->
+/* twerge:begin */
 .tw-a1b2c3d4 {
     display: flex;
     align-items: center;
@@ -37,7 +37,7 @@ This will write the CSS for all registered classes between markers:
     font-weight: 700;
     color: #1f2937;
 }
-<!-- twerge:end -->
+/* twerge:end */
 
 /* Content after the markers is preserved */
 ```

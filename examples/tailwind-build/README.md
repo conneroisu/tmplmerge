@@ -17,7 +17,7 @@ This example shows how to:
 The example creates a complete workflow:
 
 1. **Class Registration**: Define reusable components using Tailwind utility classes
-2. **CSS Generation**: Insert `@apply` rules between `<!-- twerge:begin -->` and `<!-- twerge:end -->` markers
+2. **CSS Generation**: Insert `@apply` rules between `/* twerge:begin */` and `/* twerge:end */` markers
 3. **Tailwind Processing**: Run the Tailwind CLI to process the `@apply` directives
 4. **HTML Integration**: Use the generated class names in HTML
 
