@@ -6,11 +6,16 @@ import (
 	"regexp"
 	"slices"
 	"strings"
+	"sync"
 )
 
 // ClassMapStr is a map of class strings to their generated class names
 // This variable can be populated by code generation or manually
+// It is protected by mapMutex for concurrent access
 var ClassMapStr = make(map[string]string)
+
+// mapMutex protects ClassMapStr for concurrent access
+var mapMutex sync.RWMutex
 
 var (
 	// Merge is the default template merger
@@ -68,8 +73,11 @@ func createTwMerge(
 			// Add both the original and merged versions to ClassMapStr
 			hash := sha1.Sum([]byte(merged))
 			className := "tw-" + base64.URLEncoding.EncodeToString(hash[:])[:7]
+			
+			mapMutex.Lock()
 			ClassMapStr[classList] = className
 			ClassMapStr[merged] = className
+			mapMutex.Unlock()
 		}
 
 		return merged

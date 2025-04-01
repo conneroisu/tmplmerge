@@ -5,7 +5,6 @@ import (
 	"encoding/base64"
 	"os"
 	"strings"
-	"sync"
 
 	"maps"
 
@@ -16,12 +15,6 @@ import (
 type classMap map[string]string
 
 var (
-	// Global mapping of original class strings to generated class names
-	globalClassMap = make(classMap)
-
-	// Mutex to protect globalClassMap
-	mapMutex sync.RWMutex
-
 	// cache for generated classes
 	genCache = newCache(1000)
 )
@@ -29,9 +22,12 @@ var (
 // Generate creates a short unique CSS class name from the merged classes
 func Generate(classes string) string {
 	// First check if a class name exists in ClassMapStr
+	mapMutex.RLock()
 	if className, exists := ClassMapStr[classes]; exists {
+		mapMutex.RUnlock()
 		return className
 	}
+	mapMutex.RUnlock()
 
 	// First, merge the classes
 	merged := Merge(classes)
@@ -53,7 +49,7 @@ func Generate(classes string) string {
 
 	// Store the mapping
 	mapMutex.Lock()
-	globalClassMap[classes] = classname
+	ClassMapStr[classes] = classname
 	genCache.Set(merged, classname)
 	mapMutex.Unlock()
 
@@ -65,8 +61,8 @@ func getMapping() classMap {
 	defer mapMutex.RUnlock()
 
 	// Create a copy to avoid concurrent map access issues
-	mapping := make(classMap, len(globalClassMap))
-	maps.Copy(mapping, globalClassMap)
+	mapping := make(classMap, len(ClassMapStr))
+	maps.Copy(mapping, ClassMapStr)
 
 	return mapping
 }

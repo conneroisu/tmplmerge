@@ -8,9 +8,9 @@ import (
 )
 
 func TestGenerate(t *testing.T) {
-	// Reset the global class map for testing
+	// Reset the class map for testing
 	mapMutex.Lock()
-	globalClassMap = make(classMap)
+	ClassMapStr = make(map[string]string)
 	mapMutex.Unlock()
 
 	// Test that Generate creates a consistent class name for the same input
@@ -28,18 +28,18 @@ func TestGenerate(t *testing.T) {
 }
 
 func TestGetMapping(t *testing.T) {
-	// Reset the global class map for testing
+	// Reset the class map for testing
 	mapMutex.Lock()
-	globalClassMap = make(classMap)
+	ClassMapStr = make(map[string]string)
 	mapMutex.Unlock()
 
-	// Generate some class names and store them directly in the global map for testing
+	// Generate some class names and store them directly in the map for testing
 	class1 := "tw-abcdefg"
 	class2 := "tw-hijklmn"
 
 	mapMutex.Lock()
-	globalClassMap["text-red-500 bg-blue-500"] = class1
-	globalClassMap["text-green-300 p-4"] = class2
+	ClassMapStr["text-red-500 bg-blue-500"] = class1
+	ClassMapStr["text-green-300 p-4"] = class2
 	mapMutex.Unlock()
 
 	// Get the mapping
@@ -52,13 +52,13 @@ func TestGetMapping(t *testing.T) {
 }
 
 func TestGenerateClassMapCode(t *testing.T) {
-	// Reset the global class map for testing
+	// Reset the class map for testing
 	mapMutex.Lock()
-	globalClassMap = make(classMap)
+	ClassMapStr = make(map[string]string)
 
-	// Store directly in the global map for testing
-	globalClassMap["text-red-500 bg-blue-500"] = "tw-abcdefg"
-	globalClassMap["text-green-300 p-4"] = "tw-hijklmn"
+	// Store directly in the map for testing
+	ClassMapStr["text-red-500 bg-blue-500"] = "tw-abcdefg"
+	ClassMapStr["text-green-300 p-4"] = "tw-hijklmn"
 	mapMutex.Unlock()
 
 	// Generate the code
