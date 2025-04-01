@@ -69,9 +69,7 @@ func GetRuntimeMapping() map[string]string {
 
 	// Create a copy to avoid concurrent map access issues
 	mapping := make(map[string]string, len(RuntimeClassMap))
-	for k, v := range RuntimeClassMap {
-		mapping[k] = v
-	}
+	maps.Copy(mapping, RuntimeClassMap)
 
 	return mapping
 }

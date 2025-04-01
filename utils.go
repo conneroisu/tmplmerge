@@ -12,15 +12,20 @@ import (
 	"time"
 )
 
-// Section markers used to identify where generated CSS should be placed
 const (
+	// Section markers used to identify where generated CSS should be placed
+
+	// TwergeBeginMarker is the beginning of the section where the generated CSS will be placed
 	TwergeBeginMarker = "<!-- twerge:begin -->"
-	TwergeEndMarker   = "<!-- twerge:end -->"
+	// TwergeEndMarker is the end of the section where the generated CSS will be placed
+	TwergeEndMarker = "<!-- twerge:end -->"
 )
 
 // ExportCSS exports the CSS generated from the RuntimeClassMap to a file,
 // replacing content between the twerge markers if they exist.
+//
 // If the file doesn't exist, it will be created.
+//
 // If the markers don't exist, the content will be appended to the file.
 func ExportCSS(filePath string) error {
 	cssContent := GetRuntimeClassHTML()
@@ -65,7 +70,6 @@ func WriteCSSToFile(filePath string, cssContent string) error {
 	} else {
 		// File exists, replace content between markers using optimized approach
 		var result []byte
-		var err error
 
 		// Use our optimized replaceBetweenMarkers function
 		result, err = replaceBetweenMarkers(fileContent, []byte(cssContent))
@@ -406,7 +410,7 @@ func ExportCSSWithOptions(filePath string, options CSSExportOptions) error {
 // Tailwind CSS and other necessary plugins to process Twerge's generated CSS
 func GeneratePostCSSConfig(configPath string) error {
 	// Basic PostCSS config that works with Tailwind CSS
-	config := map[string]interface{}{
+	config := map[string]any{
 		"plugins": []string{
 			"tailwindcss",
 			"autoprefixer",

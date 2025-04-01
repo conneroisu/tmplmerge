@@ -8,10 +8,20 @@ import (
 // getClassGroupIDFn returns the class group id for a given class
 type getClassGroupIDFn func(string) (isTwClass bool, groupId string)
 
+var arbitraryPropertyRegex = regexp.MustCompile(`^\[(.+)\]$`)
+
 // makeGetClassGroupID returns a getClassGroupIdfn
 func makeGetClassGroupID(conf *config) getClassGroupIDFn {
-	var getClassGroupIDRecursive func(classParts []string, i int, classMap *classPart) (isTwClass bool, groupId string)
-	getClassGroupIDRecursive = func(classParts []string, i int, classMap *classPart) (isTwClass bool, groupId string) {
+	var getClassGroupIDRecursive func(
+		classParts []string,
+		i int,
+		classMap *classPart,
+	) (isTwClass bool, groupId string)
+	getClassGroupIDRecursive = func(
+		classParts []string,
+		i int,
+		classMap *classPart,
+	) (isTwClass bool, groupId string) {
 		if i >= len(classParts) {
 			if classMap.ClassGroupID != "" {
 				return true, classMap.ClassGroupID
@@ -40,8 +50,6 @@ func makeGetClassGroupID(conf *config) getClassGroupIDFn {
 		}
 		return false, ""
 	}
-
-	var arbitraryPropertyRegex = regexp.MustCompile(`^\[(.+)\]$`)
 
 	getGroupIDForArbitraryProperty := func(class string) (bool, string) {
 		if arbitraryPropertyRegex.MatchString(class) {
