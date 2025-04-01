@@ -38,15 +38,15 @@ func main() {
 	class3Gen := twerge.Generate("flex items-center justify-between")
 	class4Gen := twerge.Generate("text-red-500 text-blue-700")
 	class5Gen := twerge.Generate("p-4 p-8")
-	
+
 	fmt.Printf("text-red-500 bg-blue-500 -> %s\n", class1Gen)
 	fmt.Printf("text-green-300 p-4 -> %s\n", class2Gen)
 	fmt.Printf("flex items-center justify-between -> %s\n", class3Gen)
 	fmt.Printf("text-red-500 text-blue-700 -> %s\n", class4Gen)
 	fmt.Printf("p-4 p-8 -> %s\n", class5Gen)
-	
+
 	// Generate the code with the populated ClassMapStr
-	code := twerge.GenerateClassMapCode()
+	code := twerge.GenerateClassMapCode("main")
 	previewLen := min(len(code), 300)
 	fmt.Printf("\nGenerated code preview:\n%s...\n", code[:previewLen])
 

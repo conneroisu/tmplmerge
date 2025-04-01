@@ -62,7 +62,7 @@ func TestGenerateClassMapCode(t *testing.T) {
 	mapMutex.Unlock()
 
 	// Generate the code
-	code := GenerateClassMapCode()
+	code := GenerateClassMapCode("twerge")
 
 	// Check that the code contains the expected content
 	assert.True(t, strings.Contains(code, "package twerge"), "Generated code should contain package declaration")

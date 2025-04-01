@@ -57,7 +57,7 @@ func main() {
 	fmt.Println("\nExample 4: Auto-generate code for ClassMapStr")
 	fmt.Println("Code that would be written to a file:")
 	fmt.Println("----------------------------------------")
-	code := twerge.GenerateClassMapCode()
+	code := twerge.GenerateClassMapCode("main")
 	fmt.Println(code)
 	fmt.Println("----------------------------------------")
 	fmt.Println("This code can be written to a file with WriteClassMapFile()")

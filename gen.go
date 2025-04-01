@@ -3,7 +3,6 @@ package twerge
 import (
 	"crypto/sha1"
 	"encoding/base64"
-	"os"
 	"strings"
 
 	"maps"
@@ -99,12 +98,4 @@ func GenerateClassMapCode(packageName string) string {
 	}
 
 	return buf.String()
-}
-
-// WriteClassMapFile writes the generated class map to the specified file
-func WriteClassMapFile(filepath string) error {
-	code := GenerateClassMapCode()
-
-	// Just write the code directly to file
-	return os.WriteFile(filepath, []byte(code), 0644)
 }
