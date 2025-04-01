@@ -1,7 +1,7 @@
 package twerge
 
 import (
-	"crypto/sha1"
+	"crypto/md5"
 	"encoding/base64"
 	"regexp"
 	"slices"
@@ -71,12 +71,11 @@ func createTwMerge(
 		// Add to ClassMapStr for lookup by other functions
 		if classList != merged {
 			// Add both the original and merged versions to ClassMapStr
-			hash := sha1.Sum([]byte(merged))
+			hash := md5.Sum([]byte(merged))
 			className := "tw-" + base64.URLEncoding.EncodeToString(hash[:])[:7]
-			
+
 			mapMutex.Lock()
 			ClassMapStr[classList] = className
-			ClassMapStr[merged] = className
 			mapMutex.Unlock()
 		}
 

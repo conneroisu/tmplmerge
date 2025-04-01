@@ -1,7 +1,7 @@
 package twerge
 
 import (
-	"crypto/sha1"
+	"crypto/md5"
 	"encoding/base64"
 	"strings"
 
@@ -40,7 +40,7 @@ func Generate(classes string) string {
 	mapMutex.RUnlock()
 
 	// Generate a hash of the merged classes
-	hash := sha1.Sum([]byte(merged))
+	hash := md5.Sum([]byte(merged))
 
 	// Use URL-safe base64 encoding and trim to 7 characters for brevity
 	encoded := base64.URLEncoding.EncodeToString(hash[:])
