@@ -18,7 +18,12 @@ var runtimeMapMutex sync.RWMutex
 // RuntimeGenerate creates a unique class name and stores it in the RuntimeClassMap
 // Similar to Generate but updates the RuntimeClassMap instead of globalClassMap
 func RuntimeGenerate(classes string) string {
-	// First check if we already have a class name for this string
+	// First check if a class name exists in ClassMapStr for quick lookup
+	if className, exists := ClassMapStr[classes]; exists {
+		return className
+	}
+
+	// Then check if we already have a class name for this string in RuntimeClassMap
 	runtimeMapMutex.RLock()
 	if className, exists := RuntimeClassMap[classes]; exists {
 		runtimeMapMutex.RUnlock()
@@ -46,20 +51,25 @@ func RuntimeGenerate(classes string) string {
 
 // RegisterClasses pre-registers a batch of classes with their generated class names
 // This is useful for initializing the RuntimeClassMap with known values
+// Also updates ClassMapStr for quick lookups
 func RegisterClasses(classMap map[string]string) {
 	runtimeMapMutex.Lock()
 	defer runtimeMapMutex.Unlock()
 
 	maps.Copy(RuntimeClassMap, classMap)
+
+	// Also update ClassMapStr for quick lookups
+	maps.Copy(ClassMapStr, classMap)
 }
 
-// ClearRuntimeMap clears the RuntimeClassMap
-// Useful for testing or resetting the map
+// ClearRuntimeMap clears the RuntimeClassMap and ClassMapStr
+// Useful for testing or resetting the maps
 func ClearRuntimeMap() {
 	runtimeMapMutex.Lock()
 	defer runtimeMapMutex.Unlock()
 
 	RuntimeClassMap = make(map[string]string)
+	ClassMapStr = make(map[string]string)
 }
 
 // GetRuntimeMapping returns a copy of the current RuntimeClassMap
@@ -102,35 +112,4 @@ func GetRuntimeClassHTML() string {
 	}
 
 	return builder.String()
-}
-
-// InitWithCommonClasses pre-populates the RuntimeClassMap with commonly used class combinations
-func InitWithCommonClasses() {
-	commonClasses := map[string]string{
-		// Layout
-		"flex items-center justify-center": "tw-layout1",
-		"flex flex-col space-y-4":          "tw-layout2",
-		"grid grid-cols-3 gap-4":           "tw-layout3",
-		"container mx-auto px-4":           "tw-layout4",
-
-		// Typography
-		"text-xl font-bold text-gray-900":                   "tw-text1",
-		"text-sm text-gray-500":                             "tw-text2",
-		"font-medium text-indigo-600 hover:text-indigo-500": "tw-text3",
-
-		// Buttons
-		"px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600":    "tw-btn1",
-		"px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300": "tw-btn2",
-		"px-4 py-2 border border-gray-300 rounded shadow-sm":            "tw-btn3",
-
-		// Cards
-		"bg-white rounded-lg shadow-md p-6": "tw-card1",
-		"bg-gray-100 rounded-lg p-4":        "tw-card2",
-
-		// Form elements
-		"block w-full rounded-md border-gray-300 shadow-sm":      "tw-input1",
-		"mt-1 block w-full rounded-md border-gray-300 shadow-sm": "tw-input2",
-	}
-
-	RegisterClasses(commonClasses)
 }

@@ -10,9 +10,9 @@ import (
 
 func main() {
 	// Generate some class names
-	class1 := twerge.Generate("text-red-500 bg-blue-500")
-	class2 := twerge.Generate("text-green-300 p-4")
-	class3 := twerge.Generate("flex items-center justify-between")
+	class1 := twerge.Merge("text-red-500 bg-blue-500")
+	class2 := twerge.Merge("text-green-300 p-4")
+	class3 := twerge.Merge("flex items-center justify-between")
 
 	// Print the generated class names
 	fmt.Println("Generated class names:")
@@ -40,6 +40,7 @@ func main() {
 	outPath := filepath.Join(os.TempDir(), "class_map_generated.go")
 	fmt.Printf("\nGenerating class map code to %s\n", outPath)
 
+	twerge.ClearRuntimeMap()
 	code := twerge.GenerateClassMapCode()
 	previewLen := min(len(code), 200)
 	fmt.Printf("\nGenerated code preview:\n%s...\n", code[:previewLen])

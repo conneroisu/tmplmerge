@@ -118,8 +118,8 @@ func isArbitraryLength(val string) bool {
 	return GetIsArbitraryValue(val, "length", isLengthOnly)
 }
 
-// IsArbitraryNumber returns true if the given value is an arbitrary number
-func IsArbitraryNumber(val string) bool {
+// isArbitraryNumber returns true if the given value is an arbitrary number
+func isArbitraryNumber(val string) bool {
 	return GetIsArbitraryValue(val, "number", isNumber)
 }
 
@@ -2251,7 +2251,7 @@ var defaultConfig = &config{
 								ClassGroupID: "text-opacity",
 							},
 							{
-								Fn:           IsArbitraryNumber,
+								Fn:           isArbitraryNumber,
 								ClassGroupID: "text-opacity",
 							},
 						},
@@ -2350,7 +2350,7 @@ var defaultConfig = &config{
 				},
 				Validators: []classGroupValidator{
 					{
-						Fn:           IsArbitraryNumber,
+						Fn:           isArbitraryNumber,
 						ClassGroupID: "font-weight",
 					},
 					{
@@ -2463,7 +2463,7 @@ var defaultConfig = &config{
 								ClassGroupID: "line-clamp",
 							},
 							{
-								Fn:           IsArbitraryNumber,
+								Fn:           isArbitraryNumber,
 								ClassGroupID: "line-clamp",
 							},
 						},
@@ -2514,7 +2514,7 @@ var defaultConfig = &config{
 								ClassGroupID: "placeholder-opacity",
 							},
 							{
-								Fn:           IsArbitraryNumber,
+								Fn:           isArbitraryNumber,
 								ClassGroupID: "placeholder-opacity",
 							},
 						},
@@ -2748,7 +2748,7 @@ var defaultConfig = &config{
 								ClassGroupID: "bg-opacity",
 							},
 							{
-								Fn:           IsArbitraryNumber,
+								Fn:           isArbitraryNumber,
 								ClassGroupID: "bg-opacity",
 							},
 						},
@@ -3453,7 +3453,7 @@ var defaultConfig = &config{
 								ClassGroupID: "border-opacity",
 							},
 							{
-								Fn:           IsArbitraryNumber,
+								Fn:           isArbitraryNumber,
 								ClassGroupID: "border-opacity",
 							},
 						},
@@ -3595,7 +3595,7 @@ var defaultConfig = &config{
 								ClassGroupID: "divide-opacity",
 							},
 							{
-								Fn:           IsArbitraryNumber,
+								Fn:           isArbitraryNumber,
 								ClassGroupID: "divide-opacity",
 							},
 						},
@@ -3681,7 +3681,7 @@ var defaultConfig = &config{
 								ClassGroupID: "ring-opacity",
 							},
 							{
-								Fn:           IsArbitraryNumber,
+								Fn:           isArbitraryNumber,
 								ClassGroupID: "ring-opacity",
 							},
 						},
@@ -3753,7 +3753,7 @@ var defaultConfig = &config{
 						ClassGroupID: "opacity",
 					},
 					{
-						Fn:           IsArbitraryNumber,
+						Fn:           isArbitraryNumber,
 						ClassGroupID: "opacity",
 					},
 				},
@@ -3867,7 +3867,7 @@ var defaultConfig = &config{
 						ClassGroupID: "brightness",
 					},
 					{
-						Fn:           IsArbitraryNumber,
+						Fn:           isArbitraryNumber,
 						ClassGroupID: "brightness",
 					},
 				},
@@ -3882,7 +3882,7 @@ var defaultConfig = &config{
 						ClassGroupID: "contrast",
 					},
 					{
-						Fn:           IsArbitraryNumber,
+						Fn:           isArbitraryNumber,
 						ClassGroupID: "contrast",
 					},
 				},
@@ -3966,7 +3966,7 @@ var defaultConfig = &config{
 						ClassGroupID: "saturate",
 					},
 					{
-						Fn:           IsArbitraryNumber,
+						Fn:           isArbitraryNumber,
 						ClassGroupID: "saturate",
 					},
 				},
@@ -4023,7 +4023,7 @@ var defaultConfig = &config{
 								ClassGroupID: "backdrop-brightness",
 							},
 							{
-								Fn:           IsArbitraryNumber,
+								Fn:           isArbitraryNumber,
 								ClassGroupID: "backdrop-brightness",
 							},
 						},
@@ -4036,7 +4036,7 @@ var defaultConfig = &config{
 								ClassGroupID: "backdrop-contrast",
 							},
 							{
-								Fn:           IsArbitraryNumber,
+								Fn:           isArbitraryNumber,
 								ClassGroupID: "backdrop-contrast",
 							},
 						},
@@ -4095,7 +4095,7 @@ var defaultConfig = &config{
 								ClassGroupID: "backdrop-opacity",
 							},
 							{
-								Fn:           IsArbitraryNumber,
+								Fn:           isArbitraryNumber,
 								ClassGroupID: "backdrop-opacity",
 							},
 						},
@@ -4108,7 +4108,7 @@ var defaultConfig = &config{
 								ClassGroupID: "backdrop-saturate",
 							},
 							{
-								Fn:           IsArbitraryNumber,
+								Fn:           isArbitraryNumber,
 								ClassGroupID: "backdrop-saturate",
 							},
 						},
@@ -4263,7 +4263,7 @@ var defaultConfig = &config{
 								ClassGroupID: "scale-x",
 							},
 							{
-								Fn:           IsArbitraryNumber,
+								Fn:           isArbitraryNumber,
 								ClassGroupID: "scale-x",
 							},
 						},
@@ -4275,7 +4275,7 @@ var defaultConfig = &config{
 								ClassGroupID: "scale-y",
 							},
 							{
-								Fn:           IsArbitraryNumber,
+								Fn:           isArbitraryNumber,
 								ClassGroupID: "scale-y",
 							},
 						},
@@ -4287,7 +4287,7 @@ var defaultConfig = &config{
 						ClassGroupID: "scale",
 					},
 					{
-						Fn:           IsArbitraryNumber,
+						Fn:           isArbitraryNumber,
 						ClassGroupID: "scale",
 					},
 				},
@@ -5125,7 +5125,7 @@ var defaultConfig = &config{
 						ClassGroupID: "stroke-w",
 					},
 					{
-						Fn:           IsArbitraryNumber,
+						Fn:           isArbitraryNumber,
 						ClassGroupID: "stroke-w",
 					},
 					{

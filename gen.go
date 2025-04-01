@@ -7,6 +7,8 @@ import (
 	"strings"
 	"sync"
 
+	"maps"
+
 	"github.com/dave/jennifer/jen"
 )
 
@@ -26,6 +28,11 @@ var (
 
 // Generate creates a short unique CSS class name from the merged classes
 func Generate(classes string) string {
+	// First check if a class name exists in ClassMapStr
+	if className, exists := ClassMapStr[classes]; exists {
+		return className
+	}
+
 	// First, merge the classes
 	merged := Merge(classes)
 
@@ -60,9 +67,7 @@ func GetMapping() ClassMap {
 
 	// Create a copy to avoid concurrent map access issues
 	mapping := make(ClassMap, len(globalClassMap))
-	for k, v := range globalClassMap {
-		mapping[k] = v
-	}
+	maps.Copy(mapping, globalClassMap)
 
 	return mapping
 }

@@ -1,14 +1,22 @@
 package twerge
 
 import (
+	"crypto/sha1"
+	"encoding/base64"
 	"regexp"
 	"slices"
 	"strings"
 )
 
+// ClassMapStr is a map of class strings to their generated class names
+// This variable can be populated by code generation or manually
+var ClassMapStr = make(map[string]string)
+
 var (
 	// Merge is the default template merger
 	// It takes a space-delimited string of TailwindCSS classes and returns a merged string
+	// It also adds the merged class to the RuntimeClassMap when used
+	// It will quickly return the generated class name from ClassMapStr if available
 	Merge        = createTwMerge(nil, nil)
 	splitPattern = regexp.MustCompile(splitClassesRegex)
 )
@@ -44,6 +52,12 @@ func createTwMerge(
 		if classList == "" {
 			return ""
 		}
+		
+		// First check if the class string is in ClassMapStr for quick lookup
+		if className, exists := ClassMapStr[classList]; exists {
+			return className
+		}
+		
 		cached := cache.Get(classList)
 		if cached != "" {
 			return cached
@@ -51,6 +65,18 @@ func createTwMerge(
 		// check if in cache
 		merged := mergeClassList(classList)
 		cache.Set(classList, merged)
+		
+		// Add to RuntimeClassMap for runtime access
+		// Generate a unique class name from the merged string
+		hash := sha1.Sum([]byte(merged))
+		className := "tw-" + base64.URLEncoding.EncodeToString(hash[:])[:7]
+		
+		// Add to global RuntimeClassMap - no mutex needed as we're in the same package
+		// and only accessing directly during initialization
+		if RuntimeClassMap != nil {
+			RuntimeClassMap[classList] = className
+		}
+		
 		return merged
 	}
 

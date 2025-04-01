@@ -1,0 +1,18 @@
+
+
+/* twerge:begin */
+.card { @apply rounded-lg p-6 bg-white shadow-md; }
+.card-hover { @apply hover:shadow-md rounded-md shadow-sm transition-shadow bg-white; }
+.navbar { @apply bg-white shadow; }
+.input { @apply w-full block focus:ring-blue-500 focus:border-blue-500 border-gray-300 shadow-sm rounded-md; }
+.layout-between { @apply flex items-center justify-between; }
+.layout-center { @apply flex items-center justify-center; }
+.grid-responsive { @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6; }
+.btn-primary { @apply bg-blue-500 text-white py-2 rounded hover:bg-blue-600 px-4; }
+.btn-secondary { @apply hover:bg-gray-300 text-gray-800 px-4 py-2 bg-gray-200 rounded; }
+.btn-danger { @apply hover:bg-red-600 px-4 rounded py-2 bg-red-500 text-white; }
+.navbar-inner { @apply px-6 py-3 flex items-center justify-between; }
+.text-muted { @apply text-gray-500 text-sm; }
+.text-title { @apply text-xl font-bold text-gray-900; }
+
+/* twerge:end */

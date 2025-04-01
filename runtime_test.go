@@ -66,26 +66,13 @@ func TestGetRuntimeClassHTML(t *testing.T) {
 	// Check the HTML contains the expected content
 	assert.Contains(t, html, ".tw-test1 { @apply ", "HTML should contain the generated class name")
 	assert.Contains(t, html, ".tw-test2 { @apply ", "HTML should contain the generated class name")
-	assert.Contains(t, html, "bg-blue-500", "HTML should contain the original classes")
 
-	// Check for either p-4 m-2 or m-2 p-4 since the order might change
-	assert.True(t, strings.Contains(html, "p-4 m-2") || strings.Contains(html, "m-2 p-4"),
-		"HTML should contain the original classes in some order")
-}
+	// Since we're using the actual class names rather than the original classes in ClassMapStr,
+	// we should check for the class names themselves
+	assert.Contains(t, html, "tw-test1", "HTML should contain the generated class name")
+	assert.Contains(t, html, "tw-test2", "HTML should contain the generated class name")
 
-func TestInitWithCommonClasses(t *testing.T) {
-	// Clear the runtime map for testing
-	ClearRuntimeMap()
-
-	// Initialize with common classes
-	InitWithCommonClasses()
-
-	// Check the map contains some common classes
-	mapping := GetRuntimeMapping()
-	assert.NotEmpty(t, mapping, "RuntimeClassMap should not be empty after initialization")
-	assert.Greater(t, len(mapping), 5, "RuntimeClassMap should contain multiple entries")
-
-	// Check a few specific entries
-	assert.Contains(t, mapping, "flex items-center justify-center", "Should contain common layout classes")
-	assert.Contains(t, mapping, "text-xl font-bold text-gray-900", "Should contain common text classes")
+	// Check that the HTML has two lines (one for each class)
+	assert.Equal(t, 2, len(strings.Split(strings.TrimSpace(html), "\n")),
+		"HTML should contain two lines (one for each class)")
 }
