@@ -52,17 +52,17 @@ func createTwMerge(
 		if classList == "" {
 			return ""
 		}
-		
+
 		// Check if we've seen this class list before in the cache
 		cached := cache.Get(classList)
 		if cached != "" {
 			return cached
 		}
-		
+
 		// Merge the classes
 		merged := mergeClassList(classList)
 		cache.Set(classList, merged)
-		
+
 		// Add to ClassMapStr for lookup by other functions
 		if classList != merged {
 			// Add both the original and merged versions to ClassMapStr
@@ -71,7 +71,7 @@ func createTwMerge(
 			ClassMapStr[classList] = className
 			ClassMapStr[merged] = className
 		}
-		
+
 		return merged
 	}
 
