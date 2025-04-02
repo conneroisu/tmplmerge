@@ -120,6 +120,11 @@ func GenerateTempl(
 		buf.WriteString(k)
 		buf.WriteString("\"></div>\n")
 	}
+	for _, v := range sortMap(ClassMapStr) {
+		buf.WriteString("<div class=\"")
+		buf.WriteString(v)
+		buf.WriteString("\"></div>\n")
+	}
 	buf.WriteString("}")
 
 	err := os.WriteFile(templPath, buf.Bytes(), 0644)
