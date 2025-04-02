@@ -80,8 +80,8 @@ func createTwMerge(
 			className := fmt.Sprintf("tw-%d", classID)
 			ClassMapStr[classList] = className
 			GenClassMergeStr[className] = merged
-			mapMutex.Unlock()
 			classID++
+			mapMutex.Unlock()
 		}
 
 		return merged
