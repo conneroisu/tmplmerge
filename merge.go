@@ -6,6 +6,12 @@ import (
 	"slices"
 	"strings"
 	"sync"
+	"unicode"
+)
+
+const (
+	// HashLimit is the length of the generated class name without the prefix "tw-".
+	HashLimit = 7
 )
 
 // ClassMapStr is a map of class strings to their generated class names
@@ -72,7 +78,7 @@ func createTwMerge(
 		if classList != merged {
 			// Add both the original and merged versions to ClassMapStr
 			hash := md5.Sum([]byte(merged))
-			className := "tw-" + base64.URLEncoding.EncodeToString(hash[:])[:7]
+			className := sanitizeCSSClassName("tw-"+base64.URLEncoding.EncodeToString(hash[:])[:HashLimit], "_")
 
 			mapMutex.Lock()
 			ClassMapStr[classList] = className
@@ -243,4 +249,33 @@ func makeSplitModifiers(conf *config) splitModifiersFn {
 		return baseClass, modifiers, hasImportant, maybePostfixModPosition
 
 	}
+}
+
+// sanitizeCSSClassName replaces disallowed characters in CSS class names with a replacement string.
+// CSS class names can contain letters (a-z, A-Z), digits (0-9), hyphens (-), and underscores (_),
+// but cannot start with a digit, hyphen, or underscore.
+func sanitizeCSSClassName(className string, replacement string) string {
+	if className == "" {
+		return ""
+	}
+
+	// Handle the first character separately to enforce it must be a letter
+	var result strings.Builder
+	firstChar := rune(className[0])
+	if unicode.IsLetter(firstChar) {
+		result.WriteRune(firstChar)
+	} else {
+		result.WriteString(replacement)
+	}
+
+	// Process the remaining characters
+	for _, char := range className[1:] {
+		if unicode.IsLetter(char) || unicode.IsDigit(char) || char == '-' || char == '_' {
+			result.WriteRune(char)
+		} else {
+			result.WriteString(replacement)
+		}
+	}
+
+	return result.String()
 }
