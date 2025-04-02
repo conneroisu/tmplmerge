@@ -25,14 +25,14 @@ const (
 // The marker is used to identify the start and end of the @apply directives generated
 // by Twerge.
 func GenerateTailwind(
-	inputPath, outputPath string,
+	cssPath string,
 	classMap map[string]string,
 ) error {
 	// Read base CSS content if the file exists
 	var baseContent []byte
 	var err error
 
-	baseContent, err = os.ReadFile(inputPath)
+	baseContent, err = os.ReadFile(cssPath)
 	if err != nil && !os.IsNotExist(err) {
 		return fmt.Errorf("error reading input file: %w", err)
 	}
@@ -66,7 +66,7 @@ func GenerateTailwind(
 		builder.WriteString(".")
 		builder.WriteString(generated)
 		builder.WriteString(" { \n\t@apply ")
-		builder.WriteString(merged)
+		builder.WriteString(escapeCSSString(merged))
 		builder.WriteString("; \n}\n")
 	}
 	cssContent := builder.String()
@@ -78,9 +78,51 @@ func GenerateTailwind(
 	}
 
 	// Write to output path
-	err = os.WriteFile(outputPath, newContent, 0644)
+	err = os.WriteFile(cssPath, newContent, 0644)
 	if err != nil {
 		return fmt.Errorf("error writing output file: %w", err)
+	}
+
+	return nil
+}
+
+// GenerateTempl creates a .templ file that can be used to generate a CSS file
+// with the provided class map.
+func GenerateTempl(
+	templPath string,
+	classMap map[string]string,
+) error {
+	tmpl, err := os.ReadFile(templPath)
+	if err != nil {
+		return fmt.Errorf("error reading template file: %w", err)
+	}
+
+	// Generate Twerge CSS content
+	// Get all keys and sort them for consistent output
+	keys := make([]string, 0, len(classMap))
+	for k := range classMap {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+
+	var builder strings.Builder
+	for _, k := range classMap {
+		// Create a CSS rule using the generated class name and the merged Tailwind classes
+		builder.WriteString("<div class=\"")
+		builder.WriteString(k)
+		builder.WriteString("\"></div>\n")
+	}
+	htmlContent := builder.String()
+
+	// Add to file content
+	newContent, err := replaceBetweenMarkers([]byte(tmpl), []byte(htmlContent))
+	if err != nil {
+		return fmt.Errorf("error adding twerge content: %w", err)
+	}
+
+	err = os.WriteFile(templPath, []byte(newContent), 0644)
+	if err != nil {
+		return fmt.Errorf("error writing .templ file: %w", err)
 	}
 
 	return nil
@@ -128,4 +170,15 @@ func replaceBetweenMarkers(content, replacement []byte) ([]byte, error) {
 	result = append(result, content[endIdx:]...)
 
 	return result, nil
+}
+func escapeCSSString(s string) string {
+	var result strings.Builder
+	for _, c := range s {
+		if c == '/' {
+			result.WriteString("\\/")
+		} else {
+			result.WriteRune(c)
+		}
+	}
+	return result.String()
 }

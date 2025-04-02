@@ -26,7 +26,7 @@ func main() {
 	// Step 2: Generate the input CSS file for Tailwind CLI
 	fmt.Println("Generating input CSS file...")
 	inputCSSPath := filepath.Join("src", "input.css")
-	err := twerge.GenerateTailwind(inputCSSPath, inputCSSPath, classMap)
+	err := twerge.GenerateTailwind(inputCSSPath, classMap)
 	if err != nil {
 		log.Fatalf("Error generating input CSS: %v", err)
 	}
@@ -256,4 +256,3 @@ func generateSampleHTML() {
 		log.Fatalf("Error generating sample HTML: %v", err)
 	}
 }
-

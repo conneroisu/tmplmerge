@@ -34,12 +34,6 @@ func TestGenerateInputCSSForTailwind(t *testing.T) {
 	}
 	defer func() { _ = os.Remove(inputFile.Name()) }()
 
-	outputFile, err := os.CreateTemp("", "twerge-output-*.css")
-	if err != nil {
-		t.Fatalf("Failed to create temp output file: %v", err)
-	}
-	defer func() { _ = os.Remove(outputFile.Name()) }()
-
 	// Write some content to the input file
 	inputContent := `@tailwind base;
 @tailwind components;
@@ -66,11 +60,11 @@ func TestGenerateInputCSSForTailwind(t *testing.T) {
 	}
 
 	// Generate input CSS
-	err = GenerateTailwind(inputFile.Name(), outputFile.Name(), classMap)
+	err = GenerateTailwind(inputFile.Name(), classMap)
 	assert.NoError(t, err)
 
 	// Read the output file
-	outputContent, err := os.ReadFile(outputFile.Name())
+	outputContent, err := os.ReadFile(inputFile.Name())
 	assert.NoError(t, err)
 
 	// Check content
