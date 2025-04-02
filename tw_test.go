@@ -39,6 +39,7 @@ func TestGenerateInputCSSForTailwind(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create temp templ file: %v", err)
 	}
+	// defer print(templFile.Name())
 	defer func() { _ = os.Remove(templFile.Name()) }()
 
 	// Write some content to the input file
@@ -61,10 +62,6 @@ func TestGenerateInputCSSForTailwind(t *testing.T) {
 	assert.NoError(t, err)
 
 	// Create a test class map
-	classMap := map[string]string{
-		"text-red-500 font-bold": "tw-test1",
-		"bg-blue-500 p-4":        "tw-test2",
-	}
 	GenClassMergeStr = map[string]string{
 		"tw-test1": "text-red-500",
 		"tw-test2": "bg-blue-500",
@@ -87,6 +84,6 @@ func TestGenerateInputCSSForTailwind(t *testing.T) {
 	assert.NotContains(t, outputStr, "Old generated content")
 	assert.Contains(t, outputStr, "/* More styles */")
 
-	err = GenerateTempl(templFile.Name(), classMap)
+	err = GenerateTempl(templFile.Name())
 	assert.NoError(t, err)
 }

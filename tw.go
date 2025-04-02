@@ -114,7 +114,7 @@ func GenerateTempl(
 	buf.WriteString(pkgName)
 	buf.WriteString("\n\n")
 	buf.WriteString("templ empty() {\n")
-	for _, k := range sortMap(GenClassMergeStr) {
+	for k := range sortMap(GenClassMergeStr) {
 		// Create a CSS rule using the generated class name and the merged Tailwind classes
 		buf.WriteString("<div class=\"")
 		buf.WriteString(k)
