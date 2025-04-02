@@ -13,6 +13,11 @@ import (
 // It is protected by mapMutex for concurrent access
 var ClassMapStr = make(map[string]string)
 
+// GenClassMergeStr is a map of class strings to their generated class names
+// This variable can be populated by code generation or manually
+// It is protected by mapMutex for concurrent access
+var GenClassMergeStr = make(map[string]string)
+
 // mapMutex protects ClassMapStr for concurrent access
 var mapMutex sync.RWMutex
 
@@ -71,6 +76,7 @@ func createTwMerge(
 
 			mapMutex.Lock()
 			ClassMapStr[classList] = className
+			GenClassMergeStr[className] = merged
 			mapMutex.Unlock()
 		}
 

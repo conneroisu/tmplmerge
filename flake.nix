@@ -70,18 +70,6 @@
           '';
           description = "Run golangci-lint";
         };
-        build = {
-          exec = ''
-            nix build --accept-flake-config .#packages.x86_64-linux.conneroh
-          '';
-          description = "Build the package";
-        };
-        update = {
-          exec = ''
-            ${pkgs.doppler}/bin/doppler run -- ${pkgs.go}/bin/go run $REPO_ROOT/cmd/update --cwd $REPO_ROOT
-          '';
-          description = "Update the generated go files.";
-        };
         unit-tests = {
           exec = ''
             ${pkgs.go}/bin/go test -v ./...
@@ -94,19 +82,6 @@
           '';
           description = "Run coverage tests.";
         };
-        generate-reload = {
-          exec = ''
-            ${pkgs.templ}/bin/templ generate &
-            ${pkgs.tailwindcss}/bin/tailwindcss \
-                --minify \
-                -i ./input.css \
-                -o ./cmd/conneroh/_static/dist/style.css \
-                --cwd $REPO_ROOT &
-            wait
-          '';
-          description = "Generate templ files and wait for completion";
-        };
-
         generate-all = {
           exec = ''
             export REPO_ROOT=$(git rev-parse --show-toplevel) # needed
@@ -114,29 +89,6 @@
             wait
           '';
           description = "Generate js files";
-        };
-
-        nix-generate-all = {
-          exec = ''
-            ${pkgs.templ}/bin/templ generate &
-
-            ${pkgs.bun}/bin/bun build \
-                ./index.ts \
-                --minify \
-                --minify-syntax \
-                --minify-whitespace  \
-                --minify-identifiers \
-                --outdir ./cmd/conneroh/_static/dist/ &
-
-            ${pkgs.tailwindcss}/bin/tailwindcss \
-                --minify \
-                -i ./input.css \
-                -o ./cmd/conneroh/_static/dist/style.css \
-                --cwd . &
-
-            wait
-          '';
-          description = "Generate all files in parallel";
         };
         format = {
           exec = ''
@@ -161,10 +113,6 @@
             cd -
           '';
           description = "Format code files";
-        };
-        run = {
-          exec = ''cd $REPO_ROOT && air'';
-          description = "Run the application with air for hot reloading";
         };
       };
 

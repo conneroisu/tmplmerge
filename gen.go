@@ -20,6 +20,9 @@ var (
 
 // Generate creates a short unique CSS class name from the merged classes
 func Generate(classes string) string {
+	if className, exists := ClassMapStr[classes]; exists {
+		return className
+	}
 	// First check if a class name exists in ClassMapStr
 	mapMutex.RLock()
 	if className, exists := ClassMapStr[classes]; exists {
