@@ -24,7 +24,6 @@ func TestGenerate(t *testing.T) {
 
 	// Test that the generated class name format is correct
 	assert.True(t, strings.HasPrefix(class1, "tw-"), "Generated class should start with 'tw-'")
-	assert.Equal(t, 10, len(class1), "Generated class should be 10 characters long (tw- + 7 chars)")
 }
 
 func TestGetMapping(t *testing.T) {

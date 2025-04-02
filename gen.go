@@ -1,8 +1,7 @@
 package twerge
 
 import (
-	"crypto/md5"
-	"encoding/base64"
+	"fmt"
 	"strings"
 
 	"maps"
@@ -42,17 +41,13 @@ func Generate(classes string) string {
 	}
 	mapMutex.RUnlock()
 
-	// Generate a hash of the merged classes
-	hash := md5.Sum([]byte(merged))
-
-	// Use URL-safe base64 encoding and trim to 7 characters for brevity
-	encoded := base64.URLEncoding.EncodeToString(hash[:])
-	classname := "tw-" + encoded[:7]
-
 	// Store the mapping
 	mapMutex.Lock()
+	classname := fmt.Sprintf("tw-%d", classID)
 	ClassMapStr[classes] = classname
+	GenClassMergeStr[classname] = merged
 	genCache.Set(merged, classname)
+	classID++
 	mapMutex.Unlock()
 
 	return classname

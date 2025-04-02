@@ -76,12 +76,12 @@ func createTwMerge(
 
 		// Add to ClassMapStr for lookup by other functions
 		if classList != merged {
-
 			mapMutex.Lock()
 			className := fmt.Sprintf("tw-%d", classID)
 			ClassMapStr[classList] = className
 			GenClassMergeStr[className] = merged
 			mapMutex.Unlock()
+			classID++
 		}
 
 		return merged
