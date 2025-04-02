@@ -24,7 +24,10 @@ const (
 //
 // The marker is used to identify the start and end of the @apply directives generated
 // by Twerge.
-func GenerateTailwind(inputPath, outputPath string, classMap map[string]string) error {
+func GenerateTailwind(
+	inputPath, outputPath string,
+	classMap map[string]string,
+) error {
 	// Read base CSS content if the file exists
 	var baseContent []byte
 	var err error

@@ -13,7 +13,7 @@ import (
 // It is protected by mapMutex for concurrent access
 var ClassMapStr = make(map[string]string)
 
-// GenClassMergeStr is a map of class strings to their generated class names
+// GenClassMergeStr is a map of merged class strings to their generated class names
 // This variable can be populated by code generation or manually
 // It is protected by mapMutex for concurrent access
 var GenClassMergeStr = make(map[string]string)
