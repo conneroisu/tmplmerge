@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"os"
+	"slices"
 	"sort"
 	"strings"
 )
@@ -51,12 +52,24 @@ func GenerateTailwind(
 	// Get all keys and sort them for consistent output
 
 	var builder strings.Builder
+	var gendClasses []string
 	for generated, merged := range sortMap(GenClassMergeStr) {
+		gendClasses = append(gendClasses, generated)
 		// Create a CSS rule using the generated class name and the merged Tailwind classes
 		builder.WriteString(".")
 		builder.WriteString(generated)
 		builder.WriteString(" { \n\t@apply ")
 		builder.WriteString(merged)
+		builder.WriteString("; \n}\n")
+	}
+	for givenClasses, gendClass := range ClassMapStr {
+		if slices.Contains(gendClasses, gendClass) {
+			continue
+		}
+		builder.WriteString(".")
+		builder.WriteString(gendClass)
+		builder.WriteString(" { \n\t@apply ")
+		builder.WriteString(Merge(givenClasses))
 		builder.WriteString("; \n}\n")
 	}
 	cssContent := builder.String()
