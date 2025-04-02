@@ -65,9 +65,13 @@ func TestGenerateInputCSSForTailwind(t *testing.T) {
 		"text-red-500 font-bold": "tw-test1",
 		"bg-blue-500 p-4":        "tw-test2",
 	}
+	GenClassMergeStr = map[string]string{
+		"tw-test1": "text-red-500",
+		"tw-test2": "bg-blue-500",
+	}
 
 	// Generate input CSS
-	err = GenerateTailwind(inputFile.Name(), classMap)
+	err = GenerateTailwind(inputFile.Name())
 	assert.NoError(t, err)
 
 	// Read the output file

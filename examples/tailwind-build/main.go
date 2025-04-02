@@ -22,11 +22,12 @@ func main() {
 
 	// Add to ClassMapStr for other operations
 	maps.Copy(twerge.ClassMapStr, classMap)
+	twerge.GenClassMergeStr = twerge.ClassMapStr
 
 	// Step 2: Generate the input CSS file for Tailwind CLI
 	fmt.Println("Generating input CSS file...")
 	inputCSSPath := filepath.Join("src", "input.css")
-	err := twerge.GenerateTailwind(inputCSSPath, classMap)
+	err := twerge.GenerateTailwind(inputCSSPath)
 	if err != nil {
 		log.Fatalf("Error generating input CSS: %v", err)
 	}

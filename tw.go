@@ -26,7 +26,6 @@ const (
 // by Twerge.
 func GenerateTailwind(
 	cssPath string,
-	classMap map[string]string,
 ) error {
 	// Read base CSS content if the file exists
 	var baseContent []byte
@@ -50,18 +49,9 @@ func GenerateTailwind(
 
 	// Generate Twerge CSS content
 	// Get all keys and sort them for consistent output
-	keys := make([]string, 0, len(classMap))
-	for k := range classMap {
-		keys = append(keys, k)
-	}
-	sort.Strings(keys)
 
 	var builder strings.Builder
-	for _, k := range keys {
-		original := k
-		generated := classMap[k]
-		merged := Merge(original)
-
+	for generated, merged := range sortMap(GenClassMergeStr) {
 		// Create a CSS rule using the generated class name and the merged Tailwind classes
 		builder.WriteString(".")
 		builder.WriteString(generated)
@@ -84,6 +74,20 @@ func GenerateTailwind(
 	}
 
 	return nil
+}
+
+func sortMap(m map[string]string) map[string]string {
+	keys := make([]string, 0, len(m))
+	for k := range m {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+
+	sorted := make(map[string]string, len(m))
+	for _, k := range keys {
+		sorted[k] = m[k]
+	}
+	return sorted
 }
 
 // GenerateTempl creates a .templ file that can be used to generate a CSS file
