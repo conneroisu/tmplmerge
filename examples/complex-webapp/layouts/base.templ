@@ -13,16 +13,12 @@ templ Base(title string, user models.User, cartItemCount int) {
 			<meta charset="UTF-8"/>
 			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 			<title>{ title } - TechShop</title>
-			
 			<!-- HTMX for interactive elements -->
 			<script src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC" crossorigin="anonymous"></script>
-			
 			<!-- TailwindCSS CDN for development -->
 			<script src="https://cdn.tailwindcss.com"></script>
-			
 			<!-- Base styles -->
 			<link rel="stylesheet" href="/static/style.css"/>
-			
 			<!-- Generated styles would normally be in an external CSS file -->
 			<style>
 				/* These styles would typically be generated at build time */
@@ -34,15 +30,12 @@ templ Base(title string, user models.User, cartItemCount int) {
 				}
 			</style>
 		</head>
-		<body class={ twerge.Generate("flex flex-col min-h-screen bg-gray-50") }>
+		<body class={ twerge.It("flex flex-col min-h-screen bg-gray-50") }>
 			@components.Header(user, cartItemCount)
-			
-			<main class={ twerge.Generate("flex-grow") }>
+			<main class={ twerge.It("flex-grow") }>
 				{ children... }
 			</main>
-			
 			@components.Footer()
-			
 			<!-- Alpine.js for client-side interactions -->
 			<script defer src="https://unpkg.com/alpinejs@3.13.3/dist/cdn.min.js"></script>
 		</body>

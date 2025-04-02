@@ -8,32 +8,29 @@ import (
 
 templ ProductCard(product models.Product) {
 	<div class="tw-card-hover">
-		<div class={ twerge.Generate("relative") }>
-			<img 
-				src={ product.ImageURL } 
+		<div class={ twerge.It("relative") }>
+			<img
+				src={ product.ImageURL }
 				alt={ product.Name }
-				class={ twerge.Generate("w-full h-48 object-cover") }
+				class={ twerge.It("w-full h-48 object-cover") }
 			/>
 			if !product.InStock {
-				<div class={ twerge.Generate("absolute top-0 right-0 bg-red-500 text-white text-xs px-2 py-1 m-2 rounded") }>
+				<div class={ twerge.It("absolute top-0 right-0 bg-red-500 text-white text-xs px-2 py-1 m-2 rounded") }>
 					Out of Stock
 				</div>
 			}
-			<div class={ twerge.Generate("absolute bottom-0 left-0 bg-gray-900 bg-opacity-70 text-white text-xs px-2 py-1 m-2 rounded") }>
+			<div class={ twerge.It("absolute bottom-0 left-0 bg-gray-900 bg-opacity-70 text-white text-xs px-2 py-1 m-2 rounded") }>
 				{ product.Category }
 			</div>
 		</div>
-
-		<div class={ twerge.Generate("p-4") }>
-			<h3 class={ twerge.Generate("text-lg font-semibold text-gray-900 mb-1") }>{ product.Name }</h3>
-			<p class={ twerge.Generate("text-gray-600 text-sm mb-2 line-clamp-2 h-10") }>{ product.Description }</p>
-			
-			<div class={ twerge.Generate("flex items-center justify-between mt-4") }>
-				<span class={ twerge.Generate("text-gray-900 font-bold") }>{ fmt.Sprintf("$%.2f", product.Price) }</span>
-				
+		<div class={ twerge.It("p-4") }>
+			<h3 class={ twerge.It("text-lg font-semibold text-gray-900 mb-1") }>{ product.Name }</h3>
+			<p class={ twerge.It("text-gray-600 text-sm mb-2 line-clamp-2 h-10") }>{ product.Description }</p>
+			<div class={ twerge.It("flex items-center justify-between mt-4") }>
+				<span class={ twerge.It("text-gray-900 font-bold") }>{ fmt.Sprintf("$%.2f", product.Price) }</span>
 				if product.InStock {
-					<button 
-						class={ twerge.Generate("py-1 px-3 bg-indigo-600 hover:bg-indigo-700 text-white text-sm rounded") }
+					<button
+						class={ twerge.It("py-1 px-3 bg-indigo-600 hover:bg-indigo-700 text-white text-sm rounded") }
 						hx-post={ fmt.Sprintf("/api/cart/add/%s", product.ID) }
 						hx-trigger="click"
 						hx-swap="none"
@@ -42,18 +39,17 @@ templ ProductCard(product models.Product) {
 						Add to Cart
 					</button>
 				} else {
-					<button 
-						class={ twerge.Generate("py-1 px-3 bg-gray-400 text-white text-sm rounded cursor-not-allowed") }
+					<button
+						class={ twerge.It("py-1 px-3 bg-gray-400 text-white text-sm rounded cursor-not-allowed") }
 						disabled="disabled"
 					>
 						Sold Out
 					</button>
 				}
 			</div>
-			
-			<div class={ twerge.Generate("flex flex-wrap gap-1 mt-2") }>
+			<div class={ twerge.It("flex flex-wrap gap-1 mt-2") }>
 				for _, tag := range product.Tags {
-					<span class={ twerge.Generate("inline-block bg-gray-200 text-gray-800 text-xs px-2 py-1 rounded") }>
+					<span class={ twerge.It("inline-block bg-gray-200 text-gray-800 text-xs px-2 py-1 rounded") }>
 						{ tag }
 					</span>
 				}

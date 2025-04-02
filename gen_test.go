@@ -14,12 +14,12 @@ func TestGenerate(t *testing.T) {
 	mapMutex.Unlock()
 
 	// Test that Generate creates a consistent class name for the same input
-	class1 := Generate("text-red-500 bg-blue-500")
-	class2 := Generate("text-red-500 bg-blue-500")
+	class1 := It("text-red-500 bg-blue-500")
+	class2 := It("text-red-500 bg-blue-500")
 	assert.Equal(t, class1, class2, "Generate should return the same class name for the same input")
 
 	// Test that Generate handles class merging correctly
-	class3 := Generate("text-red-500 text-blue-700")
+	class3 := It("text-red-500 text-blue-700")
 	assert.NotEqual(t, class1, class3, "Generate should return different class names for different inputs")
 
 	// Test that the generated class name format is correct

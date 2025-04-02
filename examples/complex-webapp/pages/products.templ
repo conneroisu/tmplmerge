@@ -11,118 +11,111 @@ templ ProductsPage(user models.User, products []models.Product, category string)
 	@layouts.Base("Products", user, cartItemCount(user)) {
 		<div class="tw-section">
 			<div class="tw-container">
-				<div class={ twerge.Generate("flex flex-col md:flex-row gap-8") }>
+				<div class={ twerge.It("flex flex-col md:flex-row gap-8") }>
 					<!-- Sidebar / Filters -->
-					<div class={ twerge.Generate("w-full md:w-1/4") }>
-						<div class={ twerge.Generate("bg-white p-4 rounded-lg shadow-sm sticky top-4") }>
-							<h2 class={ twerge.Generate("text-lg font-medium text-gray-900 mb-4") }>Filters</h2>
-							
-							<div class={ twerge.Generate("mb-6") }>
-								<h3 class={ twerge.Generate("text-sm font-medium text-gray-900 mb-2") }>Categories</h3>
-								<div class={ twerge.Generate("space-y-2") }>
-									<div class={ twerge.Generate("flex items-center") }>
-										<input 
-											id="category-all" 
-											name="category" 
-											value="all" 
-											type="radio" 
+					<div class={ twerge.It("w-full md:w-1/4") }>
+						<div class={ twerge.It("bg-white p-4 rounded-lg shadow-sm sticky top-4") }>
+							<h2 class={ twerge.It("text-lg font-medium text-gray-900 mb-4") }>Filters</h2>
+							<div class={ twerge.It("mb-6") }>
+								<h3 class={ twerge.It("text-sm font-medium text-gray-900 mb-2") }>Categories</h3>
+								<div class={ twerge.It("space-y-2") }>
+									<div class={ twerge.It("flex items-center") }>
+										<input
+											id="category-all"
+											name="category"
+											value="all"
+											type="radio"
 											checked?={ category == "" }
-											class={ twerge.Generate("h-4 w-4 text-indigo-600 focus:ring-indigo-500") }
+											class={ twerge.It("h-4 w-4 text-indigo-600 focus:ring-indigo-500") }
 											hx-get="/products"
 											hx-push-url="true"
 											hx-trigger="change"
 											hx-target="body"
 										/>
-										<label for="category-all" class={ twerge.Generate("ml-3 text-sm text-gray-600") }>All Products</label>
+										<label for="category-all" class={ twerge.It("ml-3 text-sm text-gray-600") }>All Products</label>
 									</div>
-									<div class={ twerge.Generate("flex items-center") }>
-										<input 
-											id="category-electronics" 
-											name="category" 
-											value="electronics" 
-											type="radio" 
+									<div class={ twerge.It("flex items-center") }>
+										<input
+											id="category-electronics"
+											name="category"
+											value="electronics"
+											type="radio"
 											checked?={ category == "electronics" }
-											class={ twerge.Generate("h-4 w-4 text-indigo-600 focus:ring-indigo-500") }
+											class={ twerge.It("h-4 w-4 text-indigo-600 focus:ring-indigo-500") }
 											hx-get="/products?category=electronics"
 											hx-push-url="true"
 											hx-trigger="change"
 											hx-target="body"
 										/>
-										<label for="category-electronics" class={ twerge.Generate("ml-3 text-sm text-gray-600") }>Electronics</label>
+										<label for="category-electronics" class={ twerge.It("ml-3 text-sm text-gray-600") }>Electronics</label>
 									</div>
-									<div class={ twerge.Generate("flex items-center") }>
-										<input 
-											id="category-home" 
-											name="category" 
-											value="home" 
-											type="radio" 
+									<div class={ twerge.It("flex items-center") }>
+										<input
+											id="category-home"
+											name="category"
+											value="home"
+											type="radio"
 											checked?={ category == "home" }
-											class={ twerge.Generate("h-4 w-4 text-indigo-600 focus:ring-indigo-500") }
+											class={ twerge.It("h-4 w-4 text-indigo-600 focus:ring-indigo-500") }
 											hx-get="/products?category=home"
 											hx-push-url="true"
 											hx-trigger="change"
 											hx-target="body"
 										/>
-										<label for="category-home" class={ twerge.Generate("ml-3 text-sm text-gray-600") }>Home</label>
+										<label for="category-home" class={ twerge.It("ml-3 text-sm text-gray-600") }>Home</label>
 									</div>
 								</div>
 							</div>
-							
-							<div class={ twerge.Generate("mb-6") }>
-								<h3 class={ twerge.Generate("text-sm font-medium text-gray-900 mb-2") }>Availability</h3>
-								<div class={ twerge.Generate("space-y-2") }>
-									<div class={ twerge.Generate("flex items-center") }>
-										<input id="instock-yes" name="instock" type="checkbox" class={ twerge.Generate("h-4 w-4 text-indigo-600 focus:ring-indigo-500") } />
-										<label for="instock-yes" class={ twerge.Generate("ml-3 text-sm text-gray-600") }>In Stock</label>
+							<div class={ twerge.It("mb-6") }>
+								<h3 class={ twerge.It("text-sm font-medium text-gray-900 mb-2") }>Availability</h3>
+								<div class={ twerge.It("space-y-2") }>
+									<div class={ twerge.It("flex items-center") }>
+										<input id="instock-yes" name="instock" type="checkbox" class={ twerge.It("h-4 w-4 text-indigo-600 focus:ring-indigo-500") }/>
+										<label for="instock-yes" class={ twerge.It("ml-3 text-sm text-gray-600") }>In Stock</label>
 									</div>
 								</div>
 							</div>
-							
-							<div class={ twerge.Generate("mb-6") }>
-								<h3 class={ twerge.Generate("text-sm font-medium text-gray-900 mb-2") }>Price Range</h3>
-								<div class={ twerge.Generate("space-y-2") }>
-									<div class={ twerge.Generate("flex items-center") }>
-										<input id="price-1" name="price" value="0-50" type="checkbox" class={ twerge.Generate("h-4 w-4 text-indigo-600 focus:ring-indigo-500") } />
-										<label for="price-1" class={ twerge.Generate("ml-3 text-sm text-gray-600") }>$0 - $50</label>
+							<div class={ twerge.It("mb-6") }>
+								<h3 class={ twerge.It("text-sm font-medium text-gray-900 mb-2") }>Price Range</h3>
+								<div class={ twerge.It("space-y-2") }>
+									<div class={ twerge.It("flex items-center") }>
+										<input id="price-1" name="price" value="0-50" type="checkbox" class={ twerge.It("h-4 w-4 text-indigo-600 focus:ring-indigo-500") }/>
+										<label for="price-1" class={ twerge.It("ml-3 text-sm text-gray-600") }>$0 - $50</label>
 									</div>
-									<div class={ twerge.Generate("flex items-center") }>
-										<input id="price-2" name="price" value="50-100" type="checkbox" class={ twerge.Generate("h-4 w-4 text-indigo-600 focus:ring-indigo-500") } />
-										<label for="price-2" class={ twerge.Generate("ml-3 text-sm text-gray-600") }>$50 - $100</label>
+									<div class={ twerge.It("flex items-center") }>
+										<input id="price-2" name="price" value="50-100" type="checkbox" class={ twerge.It("h-4 w-4 text-indigo-600 focus:ring-indigo-500") }/>
+										<label for="price-2" class={ twerge.It("ml-3 text-sm text-gray-600") }>$50 - $100</label>
 									</div>
-									<div class={ twerge.Generate("flex items-center") }>
-										<input id="price-3" name="price" value="100+" type="checkbox" class={ twerge.Generate("h-4 w-4 text-indigo-600 focus:ring-indigo-500") } />
-										<label for="price-3" class={ twerge.Generate("ml-3 text-sm text-gray-600") }>$100+</label>
+									<div class={ twerge.It("flex items-center") }>
+										<input id="price-3" name="price" value="100+" type="checkbox" class={ twerge.It("h-4 w-4 text-indigo-600 focus:ring-indigo-500") }/>
+										<label for="price-3" class={ twerge.It("ml-3 text-sm text-gray-600") }>$100+</label>
 									</div>
 								</div>
 							</div>
-							
-							<button class={ twerge.Generate("w-full bg-indigo-600 text-white py-2 px-4 rounded hover:bg-indigo-700") }>
+							<button class={ twerge.It("w-full bg-indigo-600 text-white py-2 px-4 rounded hover:bg-indigo-700") }>
 								Apply Filters
 							</button>
 						</div>
 					</div>
-					
 					<!-- Product Grid -->
-					<div class={ twerge.Generate("w-full md:w-3/4") }>
-						<div class={ twerge.Generate("flex justify-between items-center mb-6") }>
-							<h1 class={ twerge.Generate("text-2xl font-bold text-gray-900") }>
+					<div class={ twerge.It("w-full md:w-3/4") }>
+						<div class={ twerge.It("flex justify-between items-center mb-6") }>
+							<h1 class={ twerge.It("text-2xl font-bold text-gray-900") }>
 								if category != "" {
 									{ category } Products
 								} else {
 									All Products
 								}
 							</h1>
-							
-							<div class={ twerge.Generate("flex items-center") }>
-								<label for="sort" class={ twerge.Generate("mr-2 text-sm text-gray-700") }>Sort by:</label>
-								<select id="sort" class={ twerge.Generate("py-1 px-2 border rounded text-sm") }>
+							<div class={ twerge.It("flex items-center") }>
+								<label for="sort" class={ twerge.It("mr-2 text-sm text-gray-700") }>Sort by:</label>
+								<select id="sort" class={ twerge.It("py-1 px-2 border rounded text-sm") }>
 									<option value="latest">Latest</option>
 									<option value="price-asc">Price: Low to High</option>
 									<option value="price-desc">Price: High to Low</option>
 								</select>
 							</div>
 						</div>
-						
 						if len(products) > 0 {
 							<div class="tw-grid-responsive">
 								for _, product := range products {
@@ -130,8 +123,8 @@ templ ProductsPage(user models.User, products []models.Product, category string)
 								}
 							</div>
 						} else {
-							<div class={ twerge.Generate("text-center py-12") }>
-								<p class={ twerge.Generate("text-gray-500 text-lg") }>No products found.</p>
+							<div class={ twerge.It("text-center py-12") }>
+								<p class={ twerge.It("text-gray-500 text-lg") }>No products found.</p>
 							</div>
 						}
 					</div>

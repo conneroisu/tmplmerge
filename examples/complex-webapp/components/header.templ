@@ -7,52 +7,49 @@ import (
 )
 
 templ Header(user models.User, cartItemCount int) {
-	<header class={ twerge.Generate("bg-white shadow") }>
-		<div class={ twerge.Generate("flex items-center justify-between max-w-7xl mx-auto px-4 py-6 sm:px-6 md:justify-start md:space-x-10") }>
-			<div class={ twerge.Generate("flex justify-start lg:w-0 lg:flex-1") }>
-				<a href="/" class={ twerge.Generate("text-indigo-600 text-2xl font-bold") }>
+	<header class={ twerge.It("bg-white shadow") }>
+		<div class={ twerge.It("flex items-center justify-between max-w-7xl mx-auto px-4 py-6 sm:px-6 md:justify-start md:space-x-10") }>
+			<div class={ twerge.It("flex justify-start lg:w-0 lg:flex-1") }>
+				<a href="/" class={ twerge.It("text-indigo-600 text-2xl font-bold") }>
 					TechShop
 				</a>
 			</div>
-			
-			<nav class={ twerge.Generate("flex space-x-10") }>
-				<a href="/" class={ twerge.Generate("text-base font-medium text-gray-500 hover:text-gray-900") }>
+			<nav class={ twerge.It("flex space-x-10") }>
+				<a href="/" class={ twerge.It("text-base font-medium text-gray-500 hover:text-gray-900") }>
 					Home
 				</a>
-				<a href="/products" class={ twerge.Generate("text-base font-medium text-gray-500 hover:text-gray-900") }>
+				<a href="/products" class={ twerge.It("text-base font-medium text-gray-500 hover:text-gray-900") }>
 					Products
 				</a>
-				<a href="/about" class={ twerge.Generate("text-base font-medium text-gray-500 hover:text-gray-900") }>
+				<a href="/about" class={ twerge.It("text-base font-medium text-gray-500 hover:text-gray-900") }>
 					About
 				</a>
 			</nav>
-			
-			<div class={ twerge.Generate("flex items-center justify-end md:flex-1 lg:w-0") }>
-				<a href="/cart" class={ twerge.Generate("relative mr-4 text-gray-500 hover:text-gray-900") }>
-					<span class={ twerge.Generate("absolute -top-2 -right-2 bg-indigo-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center") }>
+			<div class={ twerge.It("flex items-center justify-end md:flex-1 lg:w-0") }>
+				<a href="/cart" class={ twerge.It("relative mr-4 text-gray-500 hover:text-gray-900") }>
+					<span class={ twerge.It("absolute -top-2 -right-2 bg-indigo-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center") }>
 						{ fmt.Sprintf("%d", cartItemCount) }
 					</span>
 					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-						<path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+						<path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"></path>
 					</svg>
 				</a>
-
 				if user.ID != "" {
-					<div class={ twerge.Generate("relative") }>
-						<div class={ twerge.Generate("flex items-center") }>
+					<div class={ twerge.It("relative") }>
+						<div class={ twerge.It("flex items-center") }>
 							<img
 								src={ user.AvatarURL }
 								alt="User avatar"
-								class={ twerge.Generate("h-8 w-8 rounded-full") }
+								class={ twerge.It("h-8 w-8 rounded-full") }
 							/>
-							<span class={ twerge.Generate("ml-2 text-sm font-medium text-gray-700") }>{ user.Name }</span>
+							<span class={ twerge.It("ml-2 text-sm font-medium text-gray-700") }>{ user.Name }</span>
 						</div>
 					</div>
 				} else {
-					<a href="/login" class={ twerge.Generate("whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900") }>
+					<a href="/login" class={ twerge.It("whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900") }>
 						Sign in
 					</a>
-					<a href="/register" class={ twerge.Generate("ml-8 whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700") }>
+					<a href="/register" class={ twerge.It("ml-8 whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700") }>
 						Sign up
 					</a>
 				}

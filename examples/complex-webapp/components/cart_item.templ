@@ -7,55 +7,52 @@ import (
 )
 
 templ CartItem(item models.CartItem) {
-	<div class={ twerge.Generate("flex items-center py-4 border-b border-gray-200") }>
-		<div class={ twerge.Generate("flex-shrink-0 w-24 h-24 bg-gray-100 rounded-md overflow-hidden") }>
+	<div class={ twerge.It("flex items-center py-4 border-b border-gray-200") }>
+		<div class={ twerge.It("flex-shrink-0 w-24 h-24 bg-gray-100 rounded-md overflow-hidden") }>
 			<img
 				src={ item.Product.ImageURL }
 				alt={ item.Product.Name }
-				class={ twerge.Generate("w-full h-full object-center object-cover") }
+				class={ twerge.It("w-full h-full object-center object-cover") }
 			/>
 		</div>
-		
-		<div class={ twerge.Generate("ml-4 flex-1 flex flex-col") }>
-			<div class={ twerge.Generate("flex justify-between text-base font-medium text-gray-900") }>
+		<div class={ twerge.It("ml-4 flex-1 flex flex-col") }>
+			<div class={ twerge.It("flex justify-between text-base font-medium text-gray-900") }>
 				<h3>
-					<a href={ templ.SafeURL(fmt.Sprintf("/product/%s", item.Product.ID)) } class={ twerge.Generate("hover:text-indigo-600") }>
+					<a href={ templ.SafeURL(fmt.Sprintf("/product/%s", item.Product.ID)) } class={ twerge.It("hover:text-indigo-600") }>
 						{ item.Product.Name }
 					</a>
 				</h3>
-				<p class={ twerge.Generate("ml-4") }>
+				<p class={ twerge.It("ml-4") }>
 					{ fmt.Sprintf("$%.2f", item.Product.Price * float64(item.Quantity)) }
 				</p>
 			</div>
-			<p class={ twerge.Generate("mt-1 text-sm text-gray-500 line-clamp-1") }>{ item.Product.Description }</p>
-			
-			<div class={ twerge.Generate("flex items-center justify-between text-sm mt-2") }>
-				<div class={ twerge.Generate("flex border rounded") }>
+			<p class={ twerge.It("mt-1 text-sm text-gray-500 line-clamp-1") }>{ item.Product.Description }</p>
+			<div class={ twerge.It("flex items-center justify-between text-sm mt-2") }>
+				<div class={ twerge.It("flex border rounded") }>
 					<button
-						class={ twerge.Generate("px-2 py-1 border-r hover:bg-gray-100") }
+						class={ twerge.It("px-2 py-1 border-r hover:bg-gray-100") }
 						hx-post={ fmt.Sprintf("/api/cart/decrease/%s", item.Product.ID) }
 						hx-trigger="click"
 						hx-swap="outerHTML"
 						hx-target="closest div[data-cart-item]"
 						disabled?={ item.Quantity <= 1 }
 					>
-						<span class={ twerge.Generate("text-gray-500") }>-</span>
+						<span class={ twerge.It("text-gray-500") }>-</span>
 					</button>
-					<span class={ twerge.Generate("px-4 py-1 flex items-center justify-center") }>{ fmt.Sprintf("%d", item.Quantity) }</span>
+					<span class={ twerge.It("px-4 py-1 flex items-center justify-center") }>{ fmt.Sprintf("%d", item.Quantity) }</span>
 					<button
-						class={ twerge.Generate("px-2 py-1 border-l hover:bg-gray-100") }
+						class={ twerge.It("px-2 py-1 border-l hover:bg-gray-100") }
 						hx-post={ fmt.Sprintf("/api/cart/increase/%s", item.Product.ID) }
 						hx-trigger="click"
 						hx-swap="outerHTML"
 						hx-target="closest div[data-cart-item]"
 					>
-						<span class={ twerge.Generate("text-gray-500") }>+</span>
+						<span class={ twerge.It("text-gray-500") }>+</span>
 					</button>
 				</div>
-				
-				<div class={ twerge.Generate("flex") }>
+				<div class={ twerge.It("flex") }>
 					<button
-						class={ twerge.Generate("text-indigo-600 hover:text-indigo-500") }
+						class={ twerge.It("text-indigo-600 hover:text-indigo-500") }
 						type="button"
 						hx-delete={ fmt.Sprintf("/api/cart/remove/%s", item.Product.ID) }
 						hx-trigger="click"

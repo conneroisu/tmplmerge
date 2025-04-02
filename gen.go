@@ -17,8 +17,8 @@ var (
 	genCache = newCache(1000)
 )
 
-// Generate creates a short unique CSS class name from the merged classes
-func Generate(classes string) string {
+// It creates a short unique CSS class name from the merged classes
+func It(classes string) string {
 	if className, exists := ClassMapStr[classes]; exists {
 		return className
 	}

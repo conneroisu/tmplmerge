@@ -33,11 +33,11 @@ func main() {
 
 	// Generate class names using Generate instead of Merge to populate ClassMapStr
 	fmt.Println("\nAdding entries to ClassMapStr:")
-	class1Gen := twerge.Generate("text-red-500 bg-blue-500")
-	class2Gen := twerge.Generate("text-green-300 p-4")
-	class3Gen := twerge.Generate("flex items-center justify-between")
-	class4Gen := twerge.Generate("text-red-500 text-blue-700")
-	class5Gen := twerge.Generate("p-4 p-8")
+	class1Gen := twerge.It("text-red-500 bg-blue-500")
+	class2Gen := twerge.It("text-green-300 p-4")
+	class3Gen := twerge.It("flex items-center justify-between")
+	class4Gen := twerge.It("text-red-500 text-blue-700")
+	class5Gen := twerge.It("p-4 p-8")
 
 	fmt.Printf("text-red-500 bg-blue-500 -> %s\n", class1Gen)
 	fmt.Printf("text-green-300 p-4 -> %s\n", class2Gen)

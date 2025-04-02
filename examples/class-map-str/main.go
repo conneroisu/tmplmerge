@@ -48,7 +48,7 @@ func main() {
 	// This uses ClassMapStr for quick lookup
 	fmt.Println("Example 3: Using ClassMapStr for lookups")
 	result3 := twerge.Merge("text-xl font-bold text-gray-900") // From ClassMapStr
-	result4 := twerge.Generate("text-sm text-gray-500")        // From ClassMapStr
+	result4 := twerge.It("text-sm text-gray-500")              // From ClassMapStr
 
 	fmt.Printf("From ClassMapStr lookup: \"%s\"\n", result3)
 	fmt.Printf("From Generate: \"%s\"\n", result4)
