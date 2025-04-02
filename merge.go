@@ -3,7 +3,6 @@ package twerge
 import (
 	"crypto/md5"
 	"encoding/base64"
-	"regexp"
 	"slices"
 	"strings"
 	"sync"
@@ -22,12 +21,8 @@ var (
 	// It takes a space-delimited string of TailwindCSS classes and returns a merged string
 	// It also adds the merged class to the ClassMapStr when used
 	// It will quickly return the generated class name from ClassMapStr if available
-	Merge        = createTwMerge(nil, nil)
-	splitPattern = regexp.MustCompile(splitClassesRegex)
+	Merge = createTwMerge(nil, nil)
 )
-
-// splitClassesRegex is the regex used to split classes
-const splitClassesRegex = `\s+`
 
 // twMergeFn is the type of the template merger.
 type twMergeFn func(classes string) string
@@ -113,7 +108,7 @@ func makeMergeClassList(
 	getClassGroupID getClassGroupIDFn,
 ) func(classList string) string {
 	return func(classList string) string {
-		classes := splitPattern.Split(strings.TrimSpace(classList), -1)
+		classes := strings.Split(strings.TrimSpace(classList), " ")
 		unqClasses := make(map[string]string, len(classes))
 		resultClassList := ""
 
