@@ -1,12 +1,10 @@
 package twerge
 
 import (
-	"crypto/md5"
-	"encoding/base64"
+	"fmt"
 	"slices"
 	"strings"
 	"sync"
-	"unicode"
 )
 
 const (
@@ -17,22 +15,24 @@ const (
 // ClassMapStr is a map of class strings to their generated class names
 // This variable can be populated by code generation or manually
 // It is protected by mapMutex for concurrent access
-var ClassMapStr = make(map[string]string)
-
-// GenClassMergeStr is a map of merged class strings to their generated class names
-// This variable can be populated by code generation or manually
-// It is protected by mapMutex for concurrent access
-var GenClassMergeStr = make(map[string]string)
-
-// mapMutex protects ClassMapStr for concurrent access
-var mapMutex sync.RWMutex
-
 var (
 	// Merge is the default template merger
 	// It takes a space-delimited string of TailwindCSS classes and returns a merged string
 	// It also adds the merged class to the ClassMapStr when used
 	// It will quickly return the generated class name from ClassMapStr if available
 	Merge = createTwMerge(nil, nil)
+
+	ClassMapStr = make(map[string]string)
+
+	// GenClassMergeStr is a map of merged class strings to their generated class names
+	// This variable can be populated by code generation or manually
+	// It is protected by mapMutex for concurrent access
+	GenClassMergeStr = make(map[string]string)
+
+	// mapMutex protects ClassMapStr for concurrent access
+	mapMutex sync.RWMutex
+
+	classID int
 )
 
 // twMergeFn is the type of the template merger.
@@ -76,11 +76,9 @@ func createTwMerge(
 
 		// Add to ClassMapStr for lookup by other functions
 		if classList != merged {
-			// Add both the original and merged versions to ClassMapStr
-			hash := md5.Sum([]byte(merged))
-			className := sanitizeCSSClassName("tw-"+base64.URLEncoding.EncodeToString(hash[:])[:HashLimit], "_")
 
 			mapMutex.Lock()
+			className := fmt.Sprintf("tw-%d", classID)
 			ClassMapStr[classList] = className
 			GenClassMergeStr[className] = merged
 			mapMutex.Unlock()
@@ -251,31 +249,31 @@ func makeSplitModifiers(conf *config) splitModifiersFn {
 	}
 }
 
-// sanitizeCSSClassName replaces disallowed characters in CSS class names with a replacement string.
-// CSS class names can contain letters (a-z, A-Z), digits (0-9), hyphens (-), and underscores (_),
-// but cannot start with a digit, hyphen, or underscore.
-func sanitizeCSSClassName(className string, replacement string) string {
-	if className == "" {
-		return ""
-	}
-
-	// Handle the first character separately to enforce it must be a letter
-	var result strings.Builder
-	firstChar := rune(className[0])
-	if unicode.IsLetter(firstChar) {
-		result.WriteRune(firstChar)
-	} else {
-		result.WriteString(replacement)
-	}
-
-	// Process the remaining characters
-	for _, char := range className[1:] {
-		if unicode.IsLetter(char) || unicode.IsDigit(char) || char == '-' || char == '_' {
-			result.WriteRune(char)
-		} else {
-			result.WriteString(replacement)
-		}
-	}
-
-	return result.String()
-}
+// // sanitizeCSSClassName replaces disallowed characters in CSS class names with a replacement string.
+// // CSS class names can contain letters (a-z, A-Z), digits (0-9), hyphens (-), and underscores (_),
+// // but cannot start with a digit, hyphen, or underscore.
+// func sanitizeCSSClassName(className string, replacement string) string {
+// 	if className == "" {
+// 		return ""
+// 	}
+//
+// 	// Handle the first character separately to enforce it must be a letter
+// 	var result strings.Builder
+// 	firstChar := rune(className[0])
+// 	if unicode.IsLetter(firstChar) {
+// 		result.WriteRune(firstChar)
+// 	} else {
+// 		result.WriteString(replacement)
+// 	}
+//
+// 	// Process the remaining characters
+// 	for _, char := range className[1:] {
+// 		if unicode.IsLetter(char) || unicode.IsDigit(char) || char == '-' || char == '_' {
+// 			result.WriteRune(char)
+// 		} else {
+// 			result.WriteString(replacement)
+// 		}
+// 	}
+//
+// 	return result.String()
+// }
