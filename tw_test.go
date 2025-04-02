@@ -1,8 +1,6 @@
 package twerge
 
 import (
-	"fmt"
-	"log"
 	"os"
 	"testing"
 
@@ -41,7 +39,7 @@ func TestGenerateInputCSSForTailwind(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create temp templ file: %v", err)
 	}
-	// defer func() { _ = os.Remove(templFile.Name()) }()
+	defer func() { _ = os.Remove(templFile.Name()) }()
 
 	// Write some content to the input file
 	inputContent := `@tailwind base;
@@ -86,8 +84,5 @@ func TestGenerateInputCSSForTailwind(t *testing.T) {
 	assert.Contains(t, outputStr, "/* More styles */")
 
 	err = GenerateTempl(templFile.Name(), classMap)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Println(templFile.Name())
+	assert.NoError(t, err)
 }

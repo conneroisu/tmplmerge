@@ -101,7 +101,7 @@ func GenerateTempl(
 		if pkgStart == -1 {
 			pkgName = "main"
 		} else {
-			pkgName = templPath[pkgStart+1 : pkgEnd-1]
+			pkgName = templPath[pkgStart+1 : pkgEnd]
 		}
 	}
 
