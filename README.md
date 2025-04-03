@@ -1,4 +1,5 @@
 # twerge
+<!-- https://pkg.go.dev/github.com/conneroisu/twerge -->
 
 generates tailwind merges and classes from go templ sources
 
