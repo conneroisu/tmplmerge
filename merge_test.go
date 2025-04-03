@@ -550,3 +550,108 @@ func areStringsEqual(s1, s2 string) bool {
 	// Compare the sorted parts
 	return strings.Join(parts1, " ") == strings.Join(parts2, " ")
 }
+
+func TestLint(t *testing.T) {
+	// Clear maps before testing
+	mapMutex.Lock()
+	ClassMapStr = make(map[string]string)
+	GenClassMergeStr = make(map[string]string)
+	classID = 0
+	mapMutex.Unlock()
+
+	// Create some test classes that will merge to the same value
+	testCases := []struct {
+		original string
+		merged   string
+	}{
+		{"bg-red-500 bg-blue-500", "bg-blue-500"},                          // Different colors, second wins
+		{"p-4 p-8", "p-8"},                                                 // Different padding sizes, second wins
+		{"m-2 mx-4", "m-2 mx-4"},                                           // No conflict, both remain
+		{"text-xl font-bold", "text-xl font-bold"},                         // No conflict, both remain
+		{"w-full w-1/2", "w-1/2"},                                          // Width conflict, second wins
+		{"bg-red-500 bg-red-600", "bg-red-600"},                            // Color conflict, second wins
+		{"border-2 border-red-500", "border-2 border-red-500"},             // No conflict, both remain
+		{"flex flex-col", "flex flex-col"},                                 // No conflict, both remain
+		{"hover:bg-blue-500 hover:bg-green-500", "hover:bg-green-500"},     // Hover variant conflict, second wins
+		{"bg-red-500 p-4 bg-blue-500", "bg-blue-500 p-4"},                  // Background color conflict, second wins
+		{"p-4 m-2 w-full w-1/2", "p-4 m-2 w-1/2"},                         // Width conflict, second wins
+	}
+
+	// Run Merge on each test case
+	for _, tc := range testCases {
+		got := Merge(tc.original)
+		if !areStringsEqual(got, tc.merged) {
+			t.Errorf("Merge failed: %s -> got: %s, expected: %s", tc.original, got, tc.merged)
+		}
+	}
+
+	// Add some duplicate merges (different original classes that merge to the same value)
+	duplicates := []struct {
+		original string
+		expected string
+	}{
+		{"bg-red-500 bg-blue-500", "bg-blue-500"},          // Same as first case above
+		{"bg-yellow-500 bg-blue-500", "bg-blue-500"},       // Different but merges to same value
+		{"p-2 p-8", "p-8"},                                 // Same merged value as second case
+		{"m-2 p-8", "m-2 p-8"},                             // Unique merged value
+		{"text-sm text-lg text-xl", "text-xl"},             // Merges to text-xl
+		{"text-base text-lg text-xl", "text-xl"},           // Also merges to text-xl
+		{"inline block", "block"},                           // Merges to block
+		{"hidden block", "block"},                           // Also merges to block
+	}
+
+	// Run merge on the duplicates
+	for _, tc := range duplicates {
+		got := Merge(tc.original)
+		if !areStringsEqual(got, tc.expected) {
+			t.Errorf("Merge failed: %s -> got: %s, expected: %s", tc.original, got, tc.expected)
+		}
+	}
+
+	// Run the Lint function to find duplicates
+	lintResults := Lint()
+
+	// Verify we have some lint reports (there should be at least 3 based on our test data)
+	if len(lintResults) < 3 {
+		t.Errorf("Expected at least 3 lint reports, got %d", len(lintResults))
+	}
+
+	// Check if expected duplicates are reported
+	expectedDuplicates := map[string]bool{
+		"bg-blue-500": false,
+		"p-8": false,
+		"text-xl": false,
+	}
+	
+	// Debug: Print all lint reports to help diagnose the issue
+	t.Logf("Number of lint reports: %d", len(lintResults))
+	for i, report := range lintResults {
+		t.Logf("Report %d: MergedValue=%s, OriginalClasses=%v", i, report.MergedValue, report.OriginalClasses)
+		
+		// Mark expected values as found
+		if _, exists := expectedDuplicates[report.MergedValue]; exists && len(report.OriginalClasses) >= 2 {
+			expectedDuplicates[report.MergedValue] = true
+		}
+	}
+	
+	// Check if all expected duplicates were found
+	for merged, found := range expectedDuplicates {
+		if !found {
+			t.Errorf("Lint did not report %s as having duplicate sources", merged)
+		}
+	}
+	
+	// Test LintString function
+	lintStr := LintString()
+	// Check if the string contains expected content
+	if !strings.Contains(lintStr, "Found") || !strings.Contains(lintStr, "cases where multiple class combinations merge") {
+		t.Error("LintString output was not formatted correctly")
+	}
+	
+	// Check that all expected duplicates are mentioned
+	for merged := range expectedDuplicates {
+		if !strings.Contains(lintStr, merged) {
+			t.Errorf("LintString did not include %s duplicates", merged)
+		}
+	}
+}
