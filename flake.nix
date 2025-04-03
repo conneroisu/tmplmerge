@@ -19,18 +19,8 @@
   };
 
   nixConfig = {
-    extra-substituters = ''
-      https://cache.nixos.org
-      https://nix-community.cachix.org
-      https://devenv.cachix.org
-      https://twerge.cachix.org
-    '';
-    extra-trusted-public-keys = ''
-      cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=
-      nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=
-      devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw=
-      twerge.cachix.org-1:rK2EdKDH7P2S4xNTXD58XiXDpXkNr3H0rpx8huCJ9+I=
-    '';
+    extra-substituters = ''https://twerge.cachix.org'';
+    extra-trusted-public-keys = ''twerge.cachix.org-1:rK2EdKDH7P2S4xNTXD58XiXDpXkNr3H0rpx8huCJ9+I='';
     extra-experimental-features = "nix-command flakes";
   };
 
