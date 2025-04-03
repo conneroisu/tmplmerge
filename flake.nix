@@ -158,12 +158,10 @@
               (specificGo gotests)
               (specificGo gotools)
               (specificGo reftools)
-              graphviz
 
               # Web
               tailwindcss
               tailwindcss-language-server
-              nodePackages.typescript-language-server
               nodePackages.prettier
 
               # Infra
