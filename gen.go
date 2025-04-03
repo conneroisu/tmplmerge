@@ -17,7 +17,11 @@ var (
 	genCache = newCache(1000)
 )
 
-// It creates a short unique CSS class name from the merged classes
+// It returns a short unique CSS class name from the merged classes.
+//
+// If the class name already exists, it will return the existing class name.
+//
+// If the class name does not exist, it will generate a new class name and return it.
 func It(classes string) string {
 	if className, exists := ClassMapStr[classes]; exists {
 		return className
@@ -32,14 +36,6 @@ func It(classes string) string {
 
 	// First, merge the classes
 	merged := Merge(classes)
-
-	// Check if we've already generated a class for this set of merged classes
-	mapMutex.RLock()
-	if cachedClass := genCache.Get(merged); cachedClass != "" {
-		mapMutex.RUnlock()
-		return cachedClass
-	}
-	mapMutex.RUnlock()
 
 	// Store the mapping
 	mapMutex.Lock()

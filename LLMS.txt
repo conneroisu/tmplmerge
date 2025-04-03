@@ -1,0 +1,25 @@
+# Introduction
+Twerge is a golang library for merging tailwindcss classes and synthesizing new class names in [templ](https://templ.guide/).
+Example:
+
+```templ
+package views
+
+import (
+	"github.com/conneroisu/twerge"
+)	
+
+templ Home() {
+	<div class={ twerge.It("flex flex-col items-center justify-center h-screen bg-gray-100") }>
+		<div class={ twerge.It("text-center text-2xl font-bold text-gray-800") }>
+			<h1>Welcome to Twerge</h1>
+		</div>
+		<div class={ twerge.It("text-center text-lg text-gray-600") }>
+			<p>This is a demo of the Twerge library</p>
+		</div>
+	</div>
+}
+```
+`twerge` introduces a required code generation step to improve performance of the runtime application.
+
+
