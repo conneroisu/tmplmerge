@@ -42,9 +42,9 @@
       "aarch64-linux"
       "aarch64-darwin"
     ] (system: let
-      # overlays = [(final: prev: {final.go = prev.go_1_24;})];
-      pkgs = import inputs.nixpkgs {inherit system;};
-      buildGoModule = pkgs.buildGoModule.override {};
+      overlays = [(final: prev: {final.go = prev.go_1_24;})];
+      pkgs = import inputs.nixpkgs {inherit system overlays;};
+      buildGoModule = pkgs.buildGoModule.override {go = pkgs.go_1_24;};
       specificGo = pkg: pkg.override {inherit buildGoModule;};
     in rec {
       devShells.default = let
