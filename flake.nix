@@ -48,132 +48,133 @@
       pkgs = import inputs.nixpkgs {inherit system;};
       buildGoModule = pkgs.buildGoModule.override {};
       specificGo = pkg: pkg.override {inherit buildGoModule;};
-
-      scripts = {
-        dx = {
-          exec = ''$EDITOR $REPO_ROOT/flake.nix'';
-          description = "Edit flake.nix";
-        };
-        clean = {
-          exec = ''${pkgs.git}/bin/git clean -fdx'';
-          description = "Clean Project";
-        };
-        tests = {
-          exec = ''${pkgs.go}/bin/go test -v ./...'';
-          description = "Run all go tests";
-        };
-        lint = {
-          exec = ''
-            ${pkgs.golangci-lint}/bin/golangci-lint run
-            ${pkgs.statix}/bin/statix check $REPO_ROOT/flake.nix
-            ${pkgs.deadnix}/bin/deadnix $REPO_ROOT/flake.nix
-          '';
-          description = "Run golangci-lint";
-        };
-        unit-tests = {
-          exec = ''
-            ${pkgs.go}/bin/go test -v ./...
-          '';
-          description = "Run unit tests.";
-        };
-        coverage-tests = {
-          exec = ''
-            ${pkgs.go}/bin/go test -v -coverprofile=coverage.out ./...
-          '';
-          description = "Run coverage tests.";
-        };
-        generate-all = {
-          exec = ''
-            export REPO_ROOT=$(git rev-parse --show-toplevel) # needed
-            ${specificGo pkgs.gomarkdoc}/bin/gomarkdoc -o README.md -e .
-            wait
-          '';
-          description = "Generate js files";
-        };
-        format = {
-          exec = ''
-            cd $(git rev-parse --show-toplevel)
-
-            ${pkgs.go}/bin/go fmt ./...
-
-            ${pkgs.git}/bin/git ls-files \
-              --others \
-              --exclude-standard \
-              --cached \
-              -- '*.js' '*.ts' '*.css' '*.md' '*.json' \
-              | xargs prettier --write
-
-            ${pkgs.golines}/bin/golines \
-              -l \
-              -w \
-              --max-len=80 \
-              --shorten-comments \
-              --ignored-dirs=.direnv .
-
-            cd -
-          '';
-          description = "Format code files";
-        };
-      };
-
-      # Convert scripts to packages
-      scriptPackages =
-        pkgs.lib.mapAttrsToList
-        (name: script: pkgs.writeShellScriptBin name script.exec)
-        scripts;
     in rec {
-      devShells.default = pkgs.mkShell {
-        shellHook = ''
-          export REPO_ROOT=$(git rev-parse --show-toplevel)
-          export CGO_CFLAGS="-O2"
+      devShells.default = let
+        scripts = {
+          dx = {
+            exec = ''$EDITOR $REPO_ROOT/flake.nix'';
+            description = "Edit flake.nix";
+          };
+          clean = {
+            exec = ''${pkgs.git}/bin/git clean -fdx'';
+            description = "Clean Project";
+          };
+          tests = {
+            exec = ''${pkgs.go}/bin/go test -v ./...'';
+            description = "Run all go tests";
+          };
+          lint = {
+            exec = ''
+              ${pkgs.golangci-lint}/bin/golangci-lint run
+              ${pkgs.statix}/bin/statix check $REPO_ROOT/flake.nix
+              ${pkgs.deadnix}/bin/deadnix $REPO_ROOT/flake.nix
+            '';
+            description = "Run golangci-lint";
+          };
+          unit-tests = {
+            exec = ''
+              ${pkgs.go}/bin/go test -v ./...
+            '';
+            description = "Run unit tests.";
+          };
+          coverage-tests = {
+            exec = ''
+              ${pkgs.go}/bin/go test -v -coverprofile=coverage.out ./...
+            '';
+            description = "Run coverage tests.";
+          };
+          generate-all = {
+            exec = ''
+              export REPO_ROOT=$(git rev-parse --show-toplevel) # needed
+              ${specificGo pkgs.gomarkdoc}/bin/gomarkdoc -o README.md -e .
+              wait
+            '';
+            description = "Generate js files";
+          };
+          format = {
+            exec = ''
+              cd $(git rev-parse --show-toplevel)
 
-          # Print available commands
-          echo "Available commands:"
-          ${pkgs.lib.concatStringsSep "\n" (
-            pkgs.lib.mapAttrsToList (
-              name: script: ''echo "  ${name} - ${script.description}"''
-            )
-            scripts
-          )}
-        '';
-        packages = with pkgs;
-          [
-            # Nix
-            alejandra
-            nixd
-            statix
-            deadnix
+              ${pkgs.go}/bin/go fmt ./...
 
-            # Go Tools
-            go_1_24
-            air
-            templ
-            pprof
-            revive
-            golangci-lint
-            (specificGo gopls)
-            (specificGo templ)
-            (specificGo golines)
-            (specificGo golangci-lint-langserver)
-            (specificGo gomarkdoc)
-            (specificGo gotests)
-            (specificGo gotools)
-            (specificGo reftools)
-            graphviz
+              ${pkgs.git}/bin/git ls-files \
+                --others \
+                --exclude-standard \
+                --cached \
+                -- '*.js' '*.ts' '*.css' '*.md' '*.json' \
+                | xargs prettier --write
 
-            # Web
-            tailwindcss
-            tailwindcss-language-server
-            nodePackages.typescript-language-server
-            nodePackages.prettier
+              ${pkgs.golines}/bin/golines \
+                -l \
+                -w \
+                --max-len=80 \
+                --shorten-comments \
+                --ignored-dirs=.direnv .
 
-            # Infra
-            wireguard-tools
-            openssl.dev
-          ]
-          # Add the generated script packages
-          ++ scriptPackages;
-      };
+              cd -
+            '';
+            description = "Format code files";
+          };
+        };
+
+        # Convert scripts to packages
+        scriptPackages =
+          pkgs.lib.mapAttrsToList
+          (name: script: pkgs.writeShellScriptBin name script.exec)
+          scripts;
+      in
+        pkgs.mkShell {
+          shellHook = ''
+            export REPO_ROOT=$(git rev-parse --show-toplevel)
+            export CGO_CFLAGS="-O2"
+
+            # Print available commands
+            echo "Available commands:"
+            ${pkgs.lib.concatStringsSep "\n" (
+              pkgs.lib.mapAttrsToList (
+                name: script: ''echo "  ${name} - ${script.description}"''
+              )
+              scripts
+            )}
+          '';
+          packages = with pkgs;
+            [
+              # Nix
+              alejandra
+              nixd
+              statix
+              deadnix
+
+              # Go Tools
+              go_1_24
+              air
+              templ
+              pprof
+              revive
+              golangci-lint
+              (specificGo gopls)
+              (specificGo templ)
+              (specificGo golines)
+              (specificGo golangci-lint-langserver)
+              (specificGo gomarkdoc)
+              (specificGo gotests)
+              (specificGo gotools)
+              (specificGo reftools)
+              graphviz
+
+              # Web
+              tailwindcss
+              tailwindcss-language-server
+              nodePackages.typescript-language-server
+              nodePackages.prettier
+
+              # Infra
+              wireguard-tools
+              openssl.dev
+            ]
+            # Add the generated script packages
+            ++ scriptPackages;
+        };
 
       overlays = {
         default = final: prev: {
