@@ -121,7 +121,7 @@
         pkgs.lib.mapAttrsToList
         (name: script: pkgs.writeShellScriptBin name script.exec)
         scripts;
-    in {
+    in rec {
       devShells.default = pkgs.mkShell {
         shellHook = ''
           export REPO_ROOT=$(git rev-parse --show-toplevel)
@@ -173,6 +173,12 @@
           ]
           # Add the generated script packages
           ++ scriptPackages;
+      };
+
+      overlays = {
+        default = final: prev: {
+          inherit (packages) hasher;
+        };
       };
 
       packages = {
