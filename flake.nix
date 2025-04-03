@@ -176,6 +176,13 @@
       };
 
       packages = {
+        hasher = buildGoModule {
+          name = "hasher";
+          src = ./cmd/hasher;
+          vendorHash = null;
+          version = "0.0.1";
+          subPackages = ["."];
+        };
         doc = pkgs.stdenv.mkDerivation {
           pname = "twerge-docs";
           version = "0.1";
