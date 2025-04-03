@@ -15,8 +15,6 @@
       inputs.flake-utils.follows = "flake-utils";
     };
 
-    mk-shell-bin.url = "github:rrbutani/nix-mk-shell-bin";
-
     systems.url = "github:nix-systems/default";
   };
 
