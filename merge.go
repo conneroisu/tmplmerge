@@ -7,11 +7,6 @@ import (
 	"sync"
 )
 
-const (
-	// HashLimit is the length of the generated class name without the prefix "tw-".
-	HashLimit = 7
-)
-
 // ClassMapStr is a map of class strings to their generated class names
 // This variable can be populated by code generation or manually
 // It is protected by mapMutex for concurrent access
