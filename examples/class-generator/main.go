@@ -1,3 +1,5 @@
+// Package main is a simple example of how to use twerge.
+// It generates some class names and saves them to a file.
 package main
 
 import (

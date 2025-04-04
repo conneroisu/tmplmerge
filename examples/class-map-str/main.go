@@ -1,3 +1,5 @@
+// Package main is a simple example of how to use twerge.
+// It demonstrates how to use ClassMapStr to populate ClassMap.
 package main
 
 import (

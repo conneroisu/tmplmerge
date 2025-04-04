@@ -1,3 +1,5 @@
+// Package main is a simple example of how to use twerge.
+// It demonstrates how to use ClassMapStr to populate ClassMap.
 package main
 
 import (
@@ -27,15 +29,16 @@ func main() {
 		merged := twerge.Merge(classes)
 		fmt.Printf("Original: %-40s -> Merged: %s\n", classes, merged)
 	}
-	
+
 	fmt.Println("\nRunning lint check to find duplicates...")
 	fmt.Println(twerge.LintString())
-	
+
 	reports := twerge.Lint()
 	fmt.Printf("Found %d cases where different class combinations merge to the same final classes.\n", len(reports))
-	
+
 	fmt.Println("\nThis helps you identify redundant classes in your codebase that could be simplified.")
 	fmt.Println("For example, you could replace:")
 	fmt.Println("  'pt-4 pb-4 pl-4 pr-4' with 'p-4'")
 	fmt.Println("  'inline block' or 'hidden block' with just 'block'")
 }
+

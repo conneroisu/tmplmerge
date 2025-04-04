@@ -1,3 +1,4 @@
+// Package models provides sample data for the demo of a more complex webapp.
 package models
 
 import "time"

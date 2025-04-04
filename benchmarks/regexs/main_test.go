@@ -1,4 +1,4 @@
-package split_benchmark
+package regexs
 
 import (
 	"regexp"
