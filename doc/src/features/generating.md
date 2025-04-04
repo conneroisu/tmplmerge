@@ -27,7 +27,7 @@ import "github.com/conneroisu/twerge"
 classes := "flex flex-col items-center justify-between p-4 rounded-lg shadow-lg bg-white hover:bg-gray-50"
 
 // Generate a short unique class name
-shortClassName := twerge.Generate(classes)
+shortClassName := twerge.It(classes)
 
 // Result: "tw-a1b2c3d4" (example - actual output will vary)
 ```
@@ -72,7 +72,7 @@ In a Go-templ template:
 <div class="flex items-center justify-between p-4 bg-white dark:bg-gray-800">...</div>
 
 // You can do this with a short generated class
-<div class={ twerge.Generate("flex items-center justify-between p-4 bg-white dark:bg-gray-800") }>...</div>
+<div class={ twerge.It("flex items-center justify-between p-4 bg-white dark:bg-gray-800") }>...</div>
 
 // Which results in HTML like:
 // <div class="tw-a1b2c3d4">...</div>

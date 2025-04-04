@@ -52,7 +52,7 @@ import (
 func main() {
     // Generate short class names
     classes := "flex items-center justify-between p-4 bg-white"
-    shortName := twerge.Generate(classes)
+    shortName := twerge.It(classes)
 
     fmt.Println("Original:", classes)
     fmt.Println("Generated:", shortName)
@@ -138,9 +138,9 @@ import (
 
 func main() {
     // Generate some classes
-    twerge.Generate("flex items-center p-4")
-    twerge.Generate("text-xl font-bold text-gray-800")
-    twerge.Generate("bg-blue-500 text-white rounded")
+    twerge.It("flex items-center p-4")
+    twerge.It("text-xl font-bold text-gray-800")
+    twerge.It("bg-blue-500 text-white rounded")
 
     // Export to CSS file
     err := twerge.ExportCSS("styles.css")
@@ -175,9 +175,9 @@ import (
 
 func main() {
     // Generate some classes
-    twerge.Generate("flex items-center p-4")
-    twerge.Generate("text-xl font-bold text-gray-800")
-    twerge.Generate("bg-blue-500 text-white rounded")
+    twerge.It("flex items-center p-4")
+    twerge.It("text-xl font-bold text-gray-800")
+    twerge.It("bg-blue-500 text-white rounded")
 
     // Generate Go code
     code := twerge.GenerateClassMapCode()
@@ -217,7 +217,7 @@ func main() {
     fmt.Println("Class prefix set to 'app-'")
 
     // Generate a class with the new prefix
-    className := twerge.Generate("flex items-center p-4")
+    className := twerge.It("flex items-center p-4")
     fmt.Println("Generated class name:", className) // Should start with "app-"
 
     // Disable cache

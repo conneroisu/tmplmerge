@@ -175,9 +175,9 @@ import (
 
 func main() {
     // Register all the classes used in your application
-    twerge.Generate("flex items-center justify-between p-4")
-    twerge.Generate("text-2xl font-bold")
-    twerge.Generate("bg-blue-500 text-white px-4 py-2 rounded")
+    twerge.It("flex items-center justify-between p-4")
+    twerge.It("text-2xl font-bold")
+    twerge.It("bg-blue-500 text-white px-4 py-2 rounded")
 
     // Export the CSS for Tailwind processing
     err := twerge.GenerateInputCSSForTailwind("tailwind-input.css", "tailwind-output.css")

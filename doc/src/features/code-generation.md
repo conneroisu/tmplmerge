@@ -128,7 +128,7 @@ func main() {
 
     // 2. Register all classes
     for _, class := range classes {
-        twerge.Generate(class)
+        twerge.It(class)
     }
 
     // 3. Generate Go code

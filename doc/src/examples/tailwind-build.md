@@ -57,23 +57,23 @@ func main() {
 // Register all the classes we want to use
 func registerClasses() {
     // Common button variants
-    twerge.Generate("px-4 py-2 rounded font-medium text-white bg-blue-500 hover:bg-blue-600")
-    twerge.Generate("px-4 py-2 rounded font-medium text-white bg-red-500 hover:bg-red-600")
-    twerge.Generate("px-4 py-2 rounded font-medium text-gray-700 bg-gray-200 hover:bg-gray-300")
+    twerge.It("px-4 py-2 rounded font-medium text-white bg-blue-500 hover:bg-blue-600")
+    twerge.It("px-4 py-2 rounded font-medium text-white bg-red-500 hover:bg-red-600")
+    twerge.It("px-4 py-2 rounded font-medium text-gray-700 bg-gray-200 hover:bg-gray-300")
 
     // Common layout classes
-    twerge.Generate("flex flex-col min-h-screen")
-    twerge.Generate("flex items-center justify-between p-4")
-    twerge.Generate("max-w-7xl mx-auto px-4 sm:px-6 lg:px-8")
+    twerge.It("flex flex-col min-h-screen")
+    twerge.It("flex items-center justify-between p-4")
+    twerge.It("max-w-7xl mx-auto px-4 sm:px-6 lg:px-8")
 
     // Common typography classes
-    twerge.Generate("text-xl font-bold text-gray-900")
-    twerge.Generate("text-sm text-gray-500")
-    twerge.Generate("prose lg:prose-xl")
+    twerge.It("text-xl font-bold text-gray-900")
+    twerge.It("text-sm text-gray-500")
+    twerge.It("prose lg:prose-xl")
 
     // Dark mode variants
-    twerge.Generate("bg-white dark:bg-gray-800")
-    twerge.Generate("text-gray-900 dark:text-white")
+    twerge.It("bg-white dark:bg-gray-800")
+    twerge.It("text-gray-900 dark:text-white")
 
     // and many more...
 }
@@ -108,7 +108,7 @@ func main() {
 
     // 2. Register all classes with Twerge
     for _, class := range classes {
-        twerge.Generate(class)
+        twerge.It(class)
     }
 
     // 3. Create build directory
