@@ -49,6 +49,16 @@ func It(classes string) string {
 	return classname
 }
 
+// If returns the class name if the condition is true, otherwise it returns the second class name.
+//
+// If the class name does not exist, it will generate a new class name and return it.
+func If(conf bool, trueClass, falseClass string) string {
+	if conf {
+		return It(trueClass)
+	}
+	return It(falseClass)
+}
+
 func getMapping() classMap {
 	mapMutex.RLock()
 	defer mapMutex.RUnlock()

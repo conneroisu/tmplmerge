@@ -57,7 +57,7 @@ func makeGetClassGroupID(conf *config) getClassGroupIDFn {
 			property := arbitraryPropertyClassName[:strings.Index(arbitraryPropertyClassName, ":")]
 
 			if property != "" {
-				// I use two dots here because one dot is used as prefix for class groups in plugins
+				// two dots here because one dot is used as prefix for class groups in plugins
 				return true, "arbitrary.." + property
 			}
 		}

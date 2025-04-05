@@ -138,8 +138,8 @@
               air
               templ
               pprof
-              revive
               golangci-lint
+              (specificGo revive)
               (specificGo gopls)
               (specificGo templ)
               (specificGo golines)
